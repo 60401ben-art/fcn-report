@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FCN 金融商品報告</title>
+<!-- 由 build_deck.py 產生：deck_src.html + deck_data.json → FCN_金融商品報告2_第8組.html -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+    --stage-bg: #111; --paper: #faf8f5; --paper-2: #f1ede7; --ink: #1a1a1a; --muted: #6b6560; --rule: #e3ddd5;
+    --hero: #e60000; --deep: #7a0000; --accent-2: #bfa57a; --cream: #fbf6ef;
+    --peer: #a49d95; --up: #e60000; --down: #138a48;
+    --cine-bg: radial-gradient(ellipse 80% 90% at 72% 40%, #2b2b2b 0%, #161616 55%, #0b0b0b 100%);
+    --f-cine: 'Noto Sans TC', sans-serif; --f-head: 'Noto Serif TC', serif;
+    --f-body: 'Noto Sans TC', sans-serif; --f-mono: 'JetBrains Mono', 'Noto Sans TC', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--stage-bg); }
+.deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--stage-bg); }
+.deck-stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden;
+    transform-origin: 0 0; background: var(--paper); font-variant-numeric: tabular-nums lining-nums; }
+.slide { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden;
+    visibility: hidden; opacity: 0; pointer-events: none; background: var(--paper); }
+.slide.active { visibility: visible; opacity: 1; pointer-events: auto; z-index: 1; }
+img { max-width: 100%; max-height: 100%; }
+@media print {
+    @page { size: 1920px 1080px; margin: 0; }
+    html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
+    .deck-viewport { position: static; overflow: visible; }
+    .deck-stage { position: static; transform: none !important; width: auto; height: auto; }
+    .slide { position: relative; visibility: visible !important; opacity: 1 !important; break-after: page; page-break-after: always; }
+    .slide:last-child { break-after: auto; page-break-after: auto; }
+    .deck-hud, .deck-progress { display: none !important; }
+}
+.deck-progress { position: fixed; left: 0; top: 0; height: 3px; width: 100%; z-index: 900; background: var(--hero);
+    transform-origin: 0 50%; transform: scaleX(0); transition: transform .6s cubic-bezier(.16,1,.3,1); }
+.deck-hud { position: fixed; right: 20px; bottom: 16px; z-index: 900; pointer-events: none;
+    font: 500 12px/1 'JetBrains Mono', monospace; letter-spacing: .08em; color: rgba(26,26,26,.45); }
+body.on-cine .deck-hud { color: rgba(251,246,239,.6); }
+.grain::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .05; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+/* ---------- cinematic ---------- */
+.cine { color: var(--cream); background: var(--cine-bg); font-family: var(--f-body); }
+.cine .redbar { position: absolute; left: 0; top: 0; bottom: 0; width: 22px; background: var(--hero); }
+.cine .kicker { position: absolute; left: 100px; top: 110px; font: 700 26px var(--f-body); letter-spacing: .12em; color: var(--hero); }
+.cine .title { position: absolute; left: 96px; top: 190px; width: 1300px; font: 900 116px/1.12 var(--f-cine); }
+.cine .title .o { color: var(--hero); }
+.cine .ln { display: block; overflow: hidden; padding-bottom: .04em; } .cine .ln > span { display: inline-block; }
+.cine .sub { position: absolute; left: 100px; top: 640px; width: 980px; font-size: 34px; line-height: 1.5; color: rgba(251,246,239,.86); text-wrap: balance; }
+.cine .meta { position: absolute; left: 100px; bottom: 64px; font: 500 24px var(--f-body); color: rgba(251,246,239,.62); }
+.cine .hero-num { position: absolute; right: 110px; bottom: 150px; text-align: right; }
+.cine .hero-num .v { font: 700 250px/0.85 var(--f-mono); color: var(--cream); letter-spacing: -.04em; white-space: nowrap; }
+.cine .hero-num .v small { font-size: .38em; color: var(--hero); }
+.cine .hero-num .c { margin-top: 30px; max-width: 760px; margin-left: auto; font: 500 28px/1.45 var(--f-body); color: rgba(251,246,239,.8); text-wrap: balance; }
+.cine .numeral { position: absolute; right: 90px; top: 70px; font: 900 400px/0.8 var(--f-head); color: transparent; -webkit-text-stroke: 3px rgba(230,0,0,.55); }
+.cine .lines { position: absolute; left: 100px; top: 560px; width: 1500px; }
+.cine .lines p { font: 500 34px/1.5 var(--f-body); color: rgba(251,246,239,.88); padding: 16px 0 16px 44px; border-top: 1px solid rgba(251,246,239,.16); position: relative; }
+.cine .lines p b { color: var(--cream); }
+.cine .lines p span.n { position: absolute; left: 0; top: 18px; font: 700 26px var(--f-mono); color: var(--hero); }
+
+/* ---------- report ---------- */
+.rep { color: var(--ink); font-family: var(--f-body); }
+.wrap { position: absolute; inset: 0; padding: 62px 110px 58px 124px; display: flex; flex-direction: column; z-index: 1; }
+.h2 { font: 700 60px/1.24 var(--f-head); letter-spacing: -0.01em; max-width: 1680px; text-wrap: balance; }
+.h2 i { font-style: normal; color: var(--hero); }
+.take { margin-top: 16px; font-size: 30px; line-height: 1.45; color: var(--muted); max-width: 1640px; text-wrap: pretty; }
+.take b { color: var(--ink); }
+.body { position: relative; flex: 1; margin-top: 30px; min-height: 0; }
+.src { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--rule); font: 400 20px/1.45 var(--f-body); color: var(--muted); text-wrap: pretty; }
+.crumb { position: absolute; left: 124px; bottom: 18px; font: 500 18px var(--f-body); color: var(--muted); z-index: 1; }
+.mono { font-family: var(--f-mono); }
+.hero-c { color: var(--hero); } .muted { color: var(--muted); } .up { color: var(--up); } .down { color: var(--down); }
+
+/* answer-first equation */
+.eq { display: grid; grid-template-columns: 1fr 70px 1fr 70px 1fr; align-items: stretch; }
+.eq .op { display: flex; align-items: center; justify-content: center; font: 700 64px var(--f-mono); color: var(--muted); }
+.eq .blk { border-top: 6px solid var(--ink); padding: 22px 6px 0; }
+.eq .blk.hot { border-top-color: var(--hero); }
+.eq .blk .k { font: 500 26px var(--f-body); color: var(--muted); }
+.eq .blk .t { font: 700 50px/1.25 var(--f-head); margin-top: 8px; }
+.eq .blk.hot .t { color: var(--hero); }
+.eq .blk .d { font: 400 30px/1.45 var(--f-body); margin-top: 14px; color: #3b3733; }
+.roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 60px; margin-top: 90px; }
+.roles .r { padding-top: 16px; border-top: 2px solid var(--rule); }
+.roles .r .who { font: 700 30px var(--f-body); }
+.roles .r .what { font: 400 30px/1.45 var(--f-body); margin-top: 8px; color: #3b3733; }
+.roles .r .what b { color: var(--hero); font-weight: 700; }
+
+/* annotated term sheet */
+.ts { display: grid; grid-template-columns: 860px 1fr; gap: 64px; height: 100%; align-items: center; }
+.ts img { width: 860px; display: block; box-shadow: 0 18px 50px rgba(0,0,0,.12); border: 1px solid var(--rule); }
+.notes .nt { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 20px 0; border-top: 1px solid var(--rule); }
+.notes .nt:first-child { border-top: 2px solid var(--ink); }
+.notes .nt .f { font: 700 30px var(--f-body); }
+.notes .nt .f small { display: block; font: 500 24px var(--f-mono); color: var(--hero); margin-top: 4px; }
+.notes .nt .m { font: 400 28px/1.45 var(--f-body); color: #3b3733; }
+.notes .nt .m b { color: var(--ink); }
+
+/* tables */
+table.t { border-collapse: collapse; width: 100%; }
+table.t th { font: 500 24px var(--f-body); color: var(--muted); text-align: right; padding: 12px 18px; border-bottom: 2px solid var(--ink); white-space: nowrap; }
+table.t th:first-child, table.t td:first-child { text-align: left; }
+table.t td { font: 500 30px var(--f-mono); text-align: right; padding: 16px 18px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+table.t td:first-child { font: 700 30px var(--f-body); }
+table.t td.h { color: var(--hero); font-weight: 700; }
+table.t td.g { color: var(--down); font-weight: 700; }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: 0 28px; align-content: start; }
+.facts div { padding: 13px 0; border-bottom: 1px solid var(--rule); font: 400 27px/1.35 var(--f-body); }
+.facts div:nth-child(odd) { color: var(--muted); font-size: 24px; padding-top: 16px; }
+
+/* flowchart */
+.flow { display: grid; grid-template-columns: 1fr 1fr; gap: 90px; height: 100%; }
+.flow .col h3 { font: 700 30px var(--f-body); padding-bottom: 12px; border-bottom: 2px solid var(--ink); margin-bottom: 26px; }
+.flow .col h3 span { color: var(--muted); font-weight: 500; font-size: 24px; margin-left: 12px; }
+.node { border: 2px solid var(--ink); padding: 16px 22px; font: 500 28px/1.4 var(--f-body); background: var(--paper); }
+.node.q { border-color: var(--ink); background: var(--paper-2); font-weight: 700; }
+.node.good { border-color: var(--ink); }
+.node.bad { border-color: var(--hero); color: var(--hero); font-weight: 700; }
+.node small { display: block; font-size: 24px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+.branch { display: grid; grid-template-columns: 110px 1fr; align-items: center; margin-top: 18px; }
+.branch .yn { font: 700 26px var(--f-body); color: var(--muted); text-align: center; position: relative; }
+.branch .yn::before { content: '→'; display: block; font: 700 34px var(--f-mono); color: var(--ink); }
+.down-arr { font: 700 34px var(--f-mono); text-align: center; margin: 6px 0; width: 110px; }
+.indent { margin-left: 110px; }
+
+/* KPI */
+.kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; height: 100%; }
+.kpi { border-top: 6px solid var(--ink); padding-top: 24px; }
+.kpi.hot { border-top-color: var(--hero); }
+.kpi .lbl { font: 700 30px var(--f-body); }
+.kpi .lbl span { color: var(--muted); font-weight: 500; font-size: 26px; margin-left: 10px; }
+.kpi .big { font: 700 150px/1 var(--f-mono); margin-top: 24px; letter-spacing: -.03em; }
+.kpi.hot .big { color: var(--hero); }
+.kpi .big small { font-size: .4em; }
+.kpi ul { list-style: none; margin-top: 28px; }
+.kpi li { font: 400 28px/1.45 var(--f-body); padding: 10px 0; border-top: 1px solid var(--rule); color: #3b3733; }
+.kpi li b { color: var(--ink); }
+
+/* statement pairs */
+.pairs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 56px 90px; align-content: center; height: 100%; }
+.pairs .lbl { font: 500 26px var(--f-body); color: var(--muted); padding-top: 16px; border-top: 2px solid var(--ink); }
+.pairs .lbl.r { border-top-color: var(--hero); color: var(--hero); }
+.pairs .stmt { font: 500 40px/1.38 var(--f-head); margin-top: 12px; text-wrap: pretty; }
+.pairs .stmt b { color: var(--hero); font-weight: 700; }
+.pairs .det { font: 400 26px/1.45 var(--f-body); margin-top: 8px; color: var(--muted); }
+
+/* risk rows */
+.risks { display: grid; grid-template-columns: 1fr 1fr; gap: 0 80px; }
+.risks .rk { display: grid; grid-template-columns: 70px 1fr; padding: 30px 0; border-top: 1px solid var(--rule); }
+.risks .rk .n { font: 700 30px var(--f-mono); color: var(--hero); }
+.risks .rk .h { font: 700 36px var(--f-body); }
+.risks .rk .d { font: 400 30px/1.45 var(--f-body); color: #3b3733; margin-top: 8px; }
+
+/* svg */
+svg text { font-family: var(--f-mono); }
+.ax { stroke: var(--rule); stroke-width: 1.5; }
+.axl { font-size: 22px; fill: var(--muted); }
+.axt { font: 500 22px var(--f-body); fill: var(--muted); }
+.lbl-b { font: 700 24px var(--f-body); }
+.lbl-s { font: 500 22px var(--f-body); fill: var(--muted); }
+.lbl-m { font: 700 28px var(--f-mono); }
+</style>
+</head>
+<body>
+<div class="deck-progress" id="progress"></div>
+<div class="deck-hud" id="hud"></div>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- 01 COVER -->
+<section class="slide cine grain" data-dur="150">
+    <div class="redbar"></div>
+    <div class="kicker" data-in="2" data-fx="fade">期貨與選擇權 · 金融商品報告 2 · FCN</div>
+    <h1 class="title"><span class="ln"><span data-in="6" data-fx="mask">每月 0.83% 的配息，</span></span><span class="ln"><span data-in="14" data-fx="mask" class="o">是賣保險收來的</span></span></h1>
+    <p class="sub" data-in="30">拆解瑞銀記憶式提前出場 FCN（WMGS18040001）：誰賣了什麼、誰賺了什麼、最後怎麼結束</p>
+    <div class="hero-num">
+        <div class="v" data-count="10" data-d="0" data-at="20" data-len="80" data-suf="<small>%</small>">0</div>
+        <div class="c" data-in="70">年化固定配息 · MS／GS／BAC · 6 個月</div>
+    </div>
+    <div class="meta" data-in="40" data-fx="fade">第 8 組　黃杉彬　陳羽承　陳頤昇　陳柏寬　·　2026/10</div>
+</section>
+
+<!-- 02 ANSWER FIRST -->
+<section class="slide rep grain" data-dur="170">
+<div class="wrap">
+    <h2 class="h2" data-in="4">先講答案：FCN 就是買一張債，再<i>賣一個賣權</i></h2>
+    <div class="body" style="display:flex;flex-direction:column;justify-content:center">
+        <div class="eq">
+            <div class="blk" data-in="14"><div class="k">買進</div><div class="t">零息債</div><div class="d">保住本金，賺 6 個月美元利息</div></div>
+            <div class="op" data-in="20" data-fx="fade">＋</div>
+            <div class="blk hot" data-in="24"><div class="k">賣出</div><div class="t">最差表現股的<br>觸及生效賣權</div><div class="d">收權利金，撐起 10% 配息；跌破下限就要接股票</div></div>
+            <div class="op" data-in="30" data-fx="fade">＋</div>
+            <div class="blk" data-in="34"><div class="k">讓渡</div><div class="t">提前出場權</div><div class="d">三檔都漲回期初價就結束，後面的配息全部取消</div></div>
+        </div>
+        <div class="roles">
+            <div class="r" data-in="60"><div class="who">散戶（投資人）</div><div class="what">用尾部風險換配息：<b>17%</b> 的情境要接股票，平均賠 30%</div></div>
+            <div class="r" data-in="68"><div class="who">中間商（台北富邦）</div><div class="what">發行時一次收 <b>0–5%</b> 通路服務費，不承擔股價風險</div></div>
+            <div class="r" data-in="76"><div class="who">上手（瑞銀）</div><div class="what">商品公允價值約 <b>97.1</b>，賣 100；再用避險鎖住價差</div></div>
+        </div>
+    </div>
+    <div class="src" data-in="110" data-fx="fade">17%、97.1：本組以 2018/4 市場條件做蒙地卡羅模擬的估計值（假設見第 14 頁）；0–5%：交易確認書第 21 頁「通路服務費」。</div>
+</div>
+<div class="crumb">結論先行</div>
+</section>
+
+<!-- 03 PART I -->
+<section class="slide cine grain" data-dur="120">
+    <div class="redbar"></div>
+    <div class="numeral" data-in="0" data-fx="scale">I</div>
+    <div class="kicker" style="top:300px" data-in="4" data-fx="fade">PART I</div>
+    <h1 class="title" style="top:360px"><span class="ln"><span data-in="8" data-fx="mask">商品介紹</span></span><span class="ln"><span data-in="16" data-fx="mask" class="o">四個數字定生死</span></span></h1>
+    <div class="hero-num" style="bottom:110px">
+        <div class="v" style="font-size:200px" data-count="72" data-d="0" data-at="30" data-len="60" data-suf="<small>%</small>">0</div>
+        <div class="c" data-in="60">瑞銀這張單的下限價：任一檔收盤跌破期初價的 72%，保護就消失</div>
+    </div>
+</section>
+
+<!-- 04 TERM SHEET -->
+<section class="slide rep grain" data-dur="160">
+<div class="wrap">
+    <h2 class="h2" data-in="4">一張條件表，真正在定價的只有<i>四個數字</i></h2>
+    <div class="body"><div class="ts">
+        <img src="assets/1.webp" alt="DBS FCN 條件表範例" data-in="10" data-fx="left">
+        <div class="notes">
+            <div class="nt" data-in="24"><div class="f">預計執行價<small>Strike 75%</small></div><div class="m">賣權的<b>履約價</b>：觸及下限後，到期低於這個價格就用它接股票</div></div>
+            <div class="nt" data-in="32"><div class="f">觸及生效價<small>EKI 65%</small></div><div class="m">賣權的<b>開關</b>：沒碰過，賣權等於不存在；碰過一次就生效</div></div>
+            <div class="nt" data-in="40"><div class="f">提前出場價<small>KO 100% · 閉鎖 1M · 記憶式</small></div><div class="m">發行商提早結束的條件：漲回來就還本，<b>後面的配息歸零</b></div></div>
+            <div class="nt" data-in="48"><div class="f">年化報酬率<small>Coupon 15.62%</small></div><div class="m">不是輸入，是<b>前三個數字算出來的結果</b>：賣權越貴，配息越高</div></div>
+        </div>
+    </div></div>
+    <div class="src" data-in="100" data-fx="fade">圖：DBS 發行之 FCN 條件表（參考進場價 2024/6/6，連結 ARM／DELL／TSM），課堂範例。連結一籃子股票時，一律看「表現最差」那一檔。</div>
+</div>
+<div class="crumb">Part I · 商品介紹 · 條件表怎麼讀</div>
+</section>
+
+<!-- 05 UBS TERMS -->
+<section class="slide rep grain" data-dur="160">
+<div class="wrap">
+    <h2 class="h2" data-in="4">主角：瑞銀 WMGS18040001，轉換價訂在 <i>100%</i></h2>
+    <p class="take" data-in="10">跟範例比，這張的執行價等於期初價：<b>只要曾跌破 72%，到期低於期初價就用期初價接股</b>，跌多少就賠多少。</p>
+    <div class="body" style="display:grid;grid-template-columns:1.15fr 1fr;gap:80px;align-items:start">
+        <table class="t" data-in="20">
+            <thead><tr><th>連結標的（USD）</th><th>期初價格</th><th>提前出場 100%</th><th>轉換價 100%</th><th>下限價 72%</th></tr></thead>
+            <tbody>
+                <tr><td>摩根士丹利 MS</td><td>52.72</td><td>52.72</td><td class="h">52.72</td><td class="g">37.96</td></tr>
+                <tr><td>高盛 GS</td><td>247.35</td><td>247.35</td><td class="h">247.35</td><td class="g">178.09</td></tr>
+                <tr><td>美國銀行 BAC</td><td>29.31</td><td>29.31</td><td class="h">29.31</td><td class="g">21.10</td></tr>
+            </tbody>
+        </table>
+        <div class="facts" data-in="34">
+            <div>發行機構</div><div>瑞士銀行（UBS AG），經倫敦分行發行</div>
+            <div>受託機構</div><div>台北富邦銀行（特定金錢信託）</div>
+            <div>天期／幣別</div><div>6 個月／美元</div>
+            <div>配息</div><div><b class="mono">0.8333%</b> 每月固定（年化 10%）</div>
+            <div>面額</div><div>每單位 10,000 美元，最低 50,000 美元</div>
+            <div>對象</div><div>專業投資人，風險等級 P4</div>
+        </div>
+    </div>
+    <div class="src" data-in="100" data-fx="fade">資料：台北富邦銀行《瑞銀定期觀察記憶式提前出場固定配息連結股票（含觸及下限價事件）結構型債券》交易確認書，2018/4/9；期初訂價日 2018/4/2。</div>
+</div>
+<div class="crumb">Part I · 商品介紹 · 主角條件</div>
+</section>
+
+<!-- 06 TIMELINE -->
+<section class="slide rep grain" data-dur="170">
+<div class="wrap">
+    <h2 class="h2" data-in="4">六個月裡有 <i>5 次</i>提前出場機會，<span id="kiDays">—</span> 個交易日天天盯下限價</h2>
+    <div class="body"><svg id="timeline" viewBox="0 0 1686 600" style="width:1686px;height:600px;overflow:visible"></svg></div>
+    <div class="src" data-in="120" data-fx="fade">資料：交易確認書「商品相關日期」。提前出場觀察日 = 前 5 個配息觀察日（不含最後一個）；觸及下限事件 = 發行日（含）至期末訂價日（含）任一預定交易日收盤價低於下限價。</div>
+</div>
+<div class="crumb">Part I · 商品介紹 · 時間軸</div>
+</section>
+
+<!-- 07 PART II -->
+<section class="slide cine grain" data-dur="120">
+    <div class="redbar"></div>
+    <div class="numeral" data-in="0" data-fx="scale">II</div>
+    <div class="kicker" style="top:300px" data-in="4" data-fx="fade">PART II</div>
+    <h1 class="title" style="top:360px"><span class="ln"><span data-in="8" data-fx="mask">運作機制</span></span><span class="ln"><span data-in="16" data-fx="mask" class="o">100 元怎麼分</span></span></h1>
+    <div class="hero-num" style="bottom:110px">
+        <div class="v" style="font-size:200px" data-count="97.1" data-d="1" data-at="30" data-len="60">0</div>
+        <div class="c" data-in="60">以 2018/4 市場條件估計：客戶付 100 買到的東西，值 97.1</div>
+    </div>
+</section>
+
+<!-- 08 WATERFALL -->
+<section class="slide rep grain" data-dur="200">
+<div class="wrap">
+    <h2 class="h2" data-in="4">客戶付 100：買到價值 <span class="mono">102.1</span> 的債，同時賣出價值 <i class="mono">5.0</i> 的賣權</h2>
+    <p class="take" data-in="10">配息現值只有 2.8，因為 <b>61% 的情境會提前出場</b>，領不滿 6 次；剩下 2.9 留給發行商與通路。</p>
+    <div class="body"><svg id="waterfall" viewBox="0 0 1686 560" style="width:1686px;height:560px;overflow:visible"></svg></div>
+    <div class="src" data-in="150" data-fx="fade">本組估計：蒙地卡羅 10 萬條路徑（含對偶變數），每日步長；波動度用 2018/1–3 月歷史值（MS 31.2%、GS 29.6%、BAC 27.9%），相關係數 0.85–0.93，r = 2.4%，股利率 1.2–1.9%。縱軸從 90 起。</div>
+</div>
+<div class="crumb">Part II · 運作機制 · 拆解</div>
+</section>
+
+<!-- 09 FLOW -->
+<section class="slide rep grain" data-dur="170">
+<div class="wrap">
+    <h2 class="h2" data-in="4">每個觀察日只問一件事：三檔是不是<i>都碰過</i> 100%？</h2>
+    <div class="body"><div class="flow">
+        <div class="col" data-in="12">
+            <h3>每月觀察日<span>5/9、6/11、7/9、8/9、9/10</span></h3>
+            <div class="node">先付當月配息 <b class="mono">0.8333%</b></div>
+            <div class="down-arr">↓</div>
+            <div class="node q">三檔都曾在任一觀察日收盤 ≥ 期初價？<small>記憶式：不必同一天</small></div>
+            <div class="branch" data-in="30"><div class="yn">是</div><div class="node">提前出場：還 100% 本金，合約結束</div></div>
+            <div class="branch" data-in="38"><div class="yn">否</div><div class="node">繼續持有，下個月再看</div></div>
+        </div>
+        <div class="col" data-in="22">
+            <h3>期末訂價日<span>10/9（只付配息，不看出場）</span></h3>
+            <div class="node q">存續期間，任一檔收盤曾 &lt; 72%？</div>
+            <div class="branch" data-in="46"><div class="yn">否</div><div class="node">還 100% 本金</div></div>
+            <div class="branch" data-in="54"><div class="yn">是</div><div class="node q">到期時最差那檔 ≥ 期初價？</div></div>
+            <div class="branch indent" data-in="62"><div class="yn">是</div><div class="node">還 100% 本金</div></div>
+            <div class="branch indent" data-in="70"><div class="yn">否</div><div class="node bad">交付最差股：10,000 ÷ 期初價 股<small style="color:var(--hero)">市值 ＝ 本金 × 到期價／期初價</small></div></div>
+        </div>
+    </div></div>
+    <div class="src" data-in="110" data-fx="fade">資料：交易確認書「提前出場給付」「觸及下限事件」「到期日給付」。畸零股以期末收盤價折算美元。</div>
+</div>
+<div class="crumb">Part II · 運作機制 · 判斷流程</div>
+</section>
+
+<!-- 10 PAYOFF -->
+<section class="slide rep grain" data-dur="200">
+<div class="wrap">
+    <h2 class="h2" data-in="4">到期損益：漲再多只賺 <i>5%</i>，跌破下限就跟股票一起賠</h2>
+    <div class="body"><svg id="payoff" viewBox="0 0 1686 640" style="width:1686px;height:640px;overflow:visible"></svg></div>
+    <div class="src" data-in="160" data-fx="fade">假設持有到期（未提前出場），損益含 6 次配息共 5%。最差股到期低於 72% 代表一定曾觸及下限，所以左側只剩一條線。</div>
+</div>
+<div class="crumb">Part II · 運作機制 · 損益圖</div>
+</section>
+
+<!-- 11 MEMORY KO -->
+<section class="slide rep grain" data-dur="170">
+<div class="wrap">
+    <h2 class="h2" data-in="4">記憶式出場：MS、BAC 第一個月就鎖定，<i>卡在高盛 97.7%</i></h2>
+    <div class="body" style="display:grid;grid-template-columns:1.35fr 1fr;gap:80px;align-items:center">
+        <table class="t" id="koTable" data-in="14"></table>
+        <div class="notes">
+            <div class="nt" style="grid-template-columns:1fr" data-in="30"><div class="m"><b>記憶式</b>：每檔只要在任一觀察日收盤 ≥ 100% 就「鎖定」，等三檔都鎖定就出場。</div></div>
+            <div class="nt" style="grid-template-columns:1fr" data-in="38"><div class="m">高盛最接近的一次是 5/9 的 <b class="mono">97.7%</b>，之後一路走低，5 次觀察都沒過關。</div></div>
+            <div class="nt" style="grid-template-columns:1fr" data-in="46"><div class="m">記憶式讓出場更容易、賣權存續更短，所以<b>同樣條件下配息會比非記憶式低</b>。</div></div>
+        </div>
+    </div>
+    <div class="src" data-in="110" data-fx="fade">資料：Yahoo Finance 未還原收盤價 ÷ 期初價格。紅底 = 當天收盤 ≥ 100%（鎖定）；10/9 為期末訂價日，不做出場觀察。</div>
+</div>
+<div class="crumb">Part II · 運作機制 · 記憶式出場</div>
+</section>
+
+<!-- 12 REPLAY -->
+<section class="slide rep grain" data-dur="230">
+<div class="wrap">
+    <h2 class="h2" data-in="4">高盛 5 次觀察都沒回到期初價，<i>撐滿 6 個月</i>；<br>到期兩個月後就跌破下限</h2>
+    <div class="body"><svg id="ubsPath" viewBox="0 0 1686 640" style="width:1686px;height:640px;overflow:visible"></svg></div>
+    <div class="src" data-in="170" data-fx="fade">資料：Yahoo Finance 未還原收盤價，2018/4/2–2018/12/31，以期初價格標準化。灰底 = 商品存續期間（4/9–10/9）；底部刻度 = 觀察日。</div>
+</div>
+<div class="crumb">Part II · 運作機制 · 回放 2018</div>
+</section>
+
+<!-- 13 OUTCOME -->
+<section class="slide rep grain" data-dur="180">
+<div class="wrap">
+    <h2 class="h2" data-in="4">結局：配息全拿、本金全還，靠的是<i>沒碰到 72%</i></h2>
+    <div class="body"><div class="kpis">
+        <div class="kpi" data-in="14">
+            <div class="lbl">實際結果<span>2018/10/12 到期</span></div>
+            <div class="big"><span data-count="5" data-d="2" data-at="24" data-len="60" data-pre="+">0</span><small>%</small></div>
+            <ul>
+                <li>6 次配息 × 0.8333%，<b>本金 100% 現金返還</b></li>
+                <li>最低申購 50,000 美元 → 6 個月領 <b class="mono">2,500</b> 美元</li>
+                <li>到期時 MS 只剩 <b class="mono">87.6%</b>，但期間最低也沒跌破 72%</li>
+            </ul>
+        </div>
+        <div class="kpi hot" data-in="30">
+            <div class="lbl">如果期間曾跌破 72%<span>例：晚兩個月到期</span></div>
+            <div class="big"><span data-count="7.4" data-d="1" data-at="40" data-len="60" data-pre="−">0</span><small>%</small></div>
+            <ul>
+                <li>改收最差股 MS：10,000 ÷ 52.72 ＝ <b class="mono">189</b> 股＋畸零股現金</li>
+                <li>市值 <b class="mono">8,756</b> 美元，本金 <b class="up">−12.4%</b>，扣掉配息 5% 後 <b class="up">−7.4%</b></li>
+                <li>實際上 GS 在 <b>12/11</b> 收盤跌破 72%（到期後第 63 天）</li>
+            </ul>
+        </div>
+    </div></div>
+    <div class="src" data-in="120" data-fx="fade">右側為假設情境：沿用 10/9 期末收盤（MS 46.16 美元），只改變「是否曾觸及下限」。紅字 = 虧損。</div>
+</div>
+<div class="crumb">Part II · 運作機制 · 怎麼結束</div>
+</section>
+
+<!-- 14 MONTE CARLO -->
+<section class="slide rep grain" data-dur="200">
+<div class="wrap">
+    <h2 class="h2" data-in="4">模擬 10 萬次：<i>61%</i> 提前出場，17% 要接股票，接到時平均賠 30%</h2>
+    <div class="body" style="display:grid;grid-template-columns:620px 1fr;gap:70px">
+        <div id="mcStack"></div>
+        <svg id="mcHist" viewBox="0 0 990 560" style="width:990px;height:560px;overflow:visible"></svg>
+    </div>
+    <div class="src" data-in="150" data-fx="fade">本組估計，假設同第 8 頁。機率為風險中立測度下的機率，用來定價，不是對真實世界的預測；改用 1 年歷史波動度（約 22%）時，接股機率降為 7%。</div>
+</div>
+<div class="crumb">Part II · 運作機制 · 模擬</div>
+</section>
+
+<!-- 15 SENSITIVITY -->
+<section class="slide rep grain" data-dur="200">
+<div class="wrap">
+    <h2 class="h2" data-in="4">每個條款都在調整你賣的賣權：<i>越安全，配息越低</i></h2>
+    <p class="take" data-in="10">同樣 10% 配息，換一個條件，這張債值多少？<b>高於 100</b> 代表發行商會虧，只能降配息。</p>
+    <div class="body" style="display:grid;grid-template-columns:640px 1fr;gap:70px">
+        <svg id="volLine" viewBox="0 0 640 520" style="width:640px;height:520px;overflow:visible"></svg>
+        <div id="termBars" style="display:flex;flex-direction:column;justify-content:center"></div>
+    </div>
+    <div class="src" data-in="150" data-fx="fade">本組估計，每點 6 萬條路徑。左圖三檔用同一波動度、1 年歷史相關係數；右圖其他假設同第 8 頁，每列只改一個條件。</div>
+</div>
+<div class="crumb">Part II · 運作機制 · 條款敏感度</div>
+</section>
+
+<!-- 16 REPLAY 2024 -->
+<section class="slide rep grain" data-dur="230">
+<div class="wrap">
+    <h2 class="h2" data-in="4">同一天報價的 3 張單，7 月初一解鎖就出場；<i>一個月後 SMCI 崩跌</i></h2>
+    <div class="body" style="display:grid;grid-template-columns:1080px 1fr;gap:50px">
+        <svg id="y24Path" viewBox="0 0 1080 640" style="width:1080px;height:640px;overflow:visible"></svg>
+        <div data-in="40">
+            <table class="t" style="margin-top:10px">
+                <thead><tr><th>條件表</th><th>實際</th><th>若沒出場</th></tr></thead>
+                <tbody>
+                    <tr><td>DBS 15.62%<br><span class="muted" style="font:500 22px var(--f-body)">ARM／DELL／TSM</span></td><td>+1.30%</td><td>本金全還</td></tr>
+                    <tr><td>Natixis 13.08%<br><span class="muted" style="font:500 22px var(--f-body)">NVDA／TSLA／DELL／SMCI</span></td><td>+1.09%</td><td class="h">−26.7%</td></tr>
+                    <tr><td>DBS 14.00%<br><span class="muted" style="font:500 22px var(--f-body)">NVDA／SMCI／DELL／ARM</span></td><td>+1.17%</td><td class="h">−31.6%</td></tr>
+                </tbody>
+            </table>
+            <p style="font:400 26px/1.45 var(--f-body);color:var(--muted);margin-top:22px">「實際」= 只領到 1 個月配息就出場；「若沒出場」= 持有到 12/5，以最差股換股的本金損益。</p>
+        </div>
+    </div>
+    <div class="src" data-in="170" data-fx="fade">資料：Yahoo Finance 收盤價，2024/6/5–12/31（條件表的 6/6 為台灣日期，對應美股 6/5 收盤）；NVDA（6/10）與 SMCI（10/1）分割後已還原，等同條件書「調整事件」條款。假設閉鎖期後每日觀察出場、每日觀察下限。</div>
+</div>
+<div class="crumb">Part II · 運作機制 · 回放 2024</div>
+</section>
+
+<!-- 17 PART III -->
+<section class="slide cine grain" data-dur="120">
+    <div class="redbar"></div>
+    <div class="numeral" data-in="0" data-fx="scale">III</div>
+    <div class="kicker" style="top:300px" data-in="4" data-fx="fade">PART III</div>
+    <h1 class="title" style="top:360px"><span class="ln"><span data-in="8" data-fx="mask">誰在賺什麼</span></span><span class="ln"><span data-in="16" data-fx="mask" class="o">上手·中間商·散戶</span></span></h1>
+    <div class="hero-num" style="bottom:110px">
+        <div class="v" style="font-size:200px" data-in="30" data-fx="scale">0–5<small>%</small></div>
+        <div class="c" data-in="60">通路服務費：發行時由發行機構一次付給受託銀行</div>
+    </div>
+</section>
+
+<!-- 18 MONEY FLOW -->
+<section class="slide rep grain" data-dur="200">
+<div class="wrap">
+    <h2 class="h2" data-in="4">錢怎麼流：客戶的 100 元，約 <i>2.9 元</i>留在中間</h2>
+    <div class="body"><svg id="moneyFlow" viewBox="0 0 1686 700" style="width:1686px;height:700px;overflow:visible"></svg></div>
+    <div class="src" data-in="160" data-fx="fade">資料：交易確認書（發行機構、發行人、受託機構、通路服務費 0–5%）。2.9 為本組估計的公允價值差，發行商與通路之間怎麼分，文件沒有揭露。</div>
+</div>
+<div class="crumb">Part III · 誰在賺 · 金流</div>
+</section>
+
+<!-- 19 RETAIL -->
+<section class="slide rep grain" data-dur="170">
+<div class="wrap">
+    <h2 class="h2" data-in="4">散戶買的是「10% 配息」，<i>賣出的是崩盤保險</i></h2>
+    <div class="body"><div class="pairs">
+        <div data-in="12"><div class="lbl">誘因 1 · 配息遠高於定存</div><div class="stmt">年化 <b>10%</b>，同期 3 個月美國國庫券只有 <span class="mono">1.68%</span></div></div>
+        <div data-in="18"><div class="lbl r">代價 1 · 上漲被封頂</div><div class="stmt">6 個月最多賺 <b>5%</b>；三檔漲 30% 也一樣</div></div>
+        <div data-in="24"><div class="lbl">誘因 2 · 每月領現金，感覺像債券</div><div class="stmt">固定配息不看股價，第一個月就有 <b>37%</b> 機會連本帶息出場</div></div>
+        <div data-in="30"><div class="lbl r">代價 2 · 尾部風險全部自己扛</div><div class="stmt"><b>17%</b> 情境要接股票，平均賠 <b>30%</b>，最大損失是全部本金</div></div>
+        <div data-in="36"><div class="lbl">誘因 3 · 「大型銀行股不會跌 28%」</div><div class="stmt">就算接股，也是自己本來就願意持有的藍籌股</div></div>
+        <div data-in="42"><div class="lbl r">代價 3 · 用期初價接股，不是用下限價</div><div class="stmt">轉換價 100%：接到的股票<b>一開始就是虧損</b></div></div>
+    </div></div>
+    <div class="src" data-in="110" data-fx="fade">國庫券：Yahoo Finance ^IRX，2018/4/2 收盤。37%、17%、30%：本組蒙地卡羅估計（風險中立機率）。</div>
+</div>
+<div class="crumb">Part III · 誰在賺 · 散戶</div>
+</section>
+
+<!-- 20 CHANNEL -->
+<section class="slide rep grain" data-dur="170">
+<div class="wrap">
+    <h2 class="h2" data-in="4">中間商的誘因：<i>不擔股價風險</i>，每賣一檔收一次費用</h2>
+    <div class="body"><div class="pairs">
+        <div data-in="12"><div class="lbl">收入 · 通路服務費</div><div class="stmt">申購金額的 <b>0–5%</b>，發行時由發行機構一次付清</div><div class="det">客戶看不到另一筆扣款，費用已經藏在配息條件裡</div></div>
+        <div data-in="20"><div class="lbl">風險 · 幾乎沒有市場風險</div><div class="stmt">受託銀行只是<b>特定金錢信託</b>的受託人，股價風險由客戶與發行商分攤</div></div>
+        <div data-in="28"><div class="lbl r">週轉 · 出場越快，費用越多</div><div class="stmt">費用按檔收，跟持有多久無關；<b>37%</b> 的情境一個月就出場、再買下一檔</div><div class="det">示意：費率 1%、一年滾 6 檔 → 一年收 6%</div></div>
+        <div data-in="36"><div class="lbl r">利益衝突 · 推短天期、高配息</div><div class="stmt">理專業績看銷量，客戶需要的卻是<b>看懂尾部風險</b></div><div class="det">所以主管機關要求只能賣給專業投資人，並審閱至少 3 天</div></div>
+    </div></div>
+    <div class="src" data-in="110" data-fx="fade">資料：交易確認書第 21 頁（通路服務費）、第 1 頁（受託對象與審閱期間）。「一年滾 6 檔」為示意計算，非實際費率。</div>
+</div>
+<div class="crumb">Part III · 誰在賺 · 中間商</div>
+</section>
+
+<!-- 21 ISSUER -->
+<section class="slide rep grain" data-dur="170">
+<div class="wrap">
+    <h2 class="h2" data-in="4">上手的誘因：用約 <i>97.1</i> 的成本，賣出 100 的商品</h2>
+    <div class="body"><div class="pairs">
+        <div data-in="12"><div class="lbl">誘因 1 · 定價利潤</div><div class="stmt">客戶賣出賣權的價格<b>低於公允價值</b>，交易台用 Delta 避險把價差鎖住</div></div>
+        <div data-in="20"><div class="lbl">誘因 2 · 便宜的美元資金</div><div class="stmt">FCN 是發行商的<b>無擔保債務</b>，等於 6 個月期的籌資管道</div></div>
+        <div data-in="28"><div class="lbl">誘因 3 · 買回波動度與相關性</div><div class="stmt">客戶做空波動度、做空相關性；交易台可以拿來<b>抵銷其他部位</b></div></div>
+        <div data-in="36"><div class="lbl r">風險 · 跳空與相關性失準</div><div class="stmt">股價跳空穿過下限、三檔同時崩跌時避險跟不上，<b>所以定價時多收</b></div></div>
+    </div></div>
+    <div class="src" data-in="110" data-fx="fade">97.1：本組估計的公允價值，已包含付給通路的服務費。發行商實際的避險方式與利潤未公開，本頁為結構上的推論。</div>
+</div>
+<div class="crumb">Part III · 誰在賺 · 上手</div>
+</section>
+
+<!-- 22 RISKS -->
+<section class="slide rep grain" data-dur="170">
+<div class="wrap">
+    <h2 class="h2" data-in="4">投資人要扛的六種風險，<i>配息率只反映其中一部分</i></h2>
+    <div class="body" style="display:flex;align-items:center"><div class="risks" style="width:100%">
+        <div class="rk" data-in="12"><div class="n">01</div><div><div class="h">市場風險</div><div class="d">觸及下限後到期接最差股，最大損失為全部本金</div></div></div>
+        <div class="rk" data-in="18"><div class="n">02</div><div><div class="h">報酬封頂</div><div class="d">最多 6 次配息，標的大漲也拿不到</div></div></div>
+        <div class="rk" data-in="24"><div class="n">03</div><div><div class="h">發行機構信用</div><div class="d">無擔保、無保證；2023 年瑞士信貸被瑞銀併購，發行商也會出事</div></div></div>
+        <div class="rk" data-in="30"><div class="n">04</div><div><div class="h">流動性</div><div class="d">提前贖回按發行商評價扣避險成本，可能遠低於 100%</div></div></div>
+        <div class="rk" data-in="36"><div class="n">05</div><div><div class="h">集中與相關性</div><div class="d">三檔都是美國大型銀行股，2018 年 12 月一起下跌</div></div></div>
+        <div class="rk" data-in="42"><div class="n">06</div><div><div class="h">匯率與交割成本</div><div class="d">美元計價；接股後賣出要另付手續費與稅費</div></div></div>
+    </div></div>
+    <div class="src" data-in="110" data-fx="fade">資料：交易確認書投資風險警語與費用揭露；第 12 頁回放。</div>
+</div>
+<div class="crumb">風險</div>
+</section>
+
+<!-- 23 CLOSING -->
+<section class="slide cine grain" data-dur="150">
+    <div class="redbar"></div>
+    <h1 class="title" style="top:150px;font-size:100px;width:1600px"><span class="ln"><span data-in="6" data-fx="mask">高配息不是免費的，</span></span><span class="ln"><span data-in="14" data-fx="mask" class="o">你就是賣保險的那個人</span></span></h1>
+    <div class="lines">
+        <p data-in="34"><span class="n">01</span><b>FCN ＝ 零息債 ＋ 賣出最差股觸及生效賣權 ＋ 讓渡提前出場權</b></p>
+        <p data-in="42"><span class="n">02</span>瑞銀這張單以 2018/4 條件估值約 97.1，<b>2.9 留給發行商與通路</b></p>
+        <p data-in="50"><span class="n">03</span>結果看路徑：2018 這張撐滿拿 5%，<b>晚兩個月到期就破 72%</b>；2024 三張靠出場躲過 SMCI</p>
+    </div>
+    <div class="meta" data-in="60" data-fx="fade">第 8 組 · 課程作業用途，不構成投資建議　　Q&amp;A</div>
+</section>
+
+</main>
+</div>
+
+<script>
+const DATA = {"ubs": {"dates": ["2018-04-02", "2018-04-03", "2018-04-04", "2018-04-05", "2018-04-06", "2018-04-09", "2018-04-10", "2018-04-11", "2018-04-12", "2018-04-13", "2018-04-16", "2018-04-17", "2018-04-18", "2018-04-19", "2018-04-20", "2018-04-23", "2018-04-24", "2018-04-25", "2018-04-26", "2018-04-27", "2018-04-30", "2018-05-01", "2018-05-02", "2018-05-03", "2018-05-04", "2018-05-07", "2018-05-08", "2018-05-09", "2018-05-10", "2018-05-11", "2018-05-14", "2018-05-15", "2018-05-16", "2018-05-17", "2018-05-18", "2018-05-21", "2018-05-22", "2018-05-23", "2018-05-24", "2018-05-25", "2018-05-29", "2018-05-30", "2018-05-31", "2018-06-01", "2018-06-04", "2018-06-05", "2018-06-06", "2018-06-07", "2018-06-08", "2018-06-11", "2018-06-12", "2018-06-13", "2018-06-14", "2018-06-15", "2018-06-18", "2018-06-19", "2018-06-20", "2018-06-21", "2018-06-22", "2018-06-25", "2018-06-26", "2018-06-27", "2018-06-28", "2018-06-29", "2018-07-02", "2018-07-03", "2018-07-05", "2018-07-06", "2018-07-09", "2018-07-10", "2018-07-11", "2018-07-12", "2018-07-13", "2018-07-16", "2018-07-17", "2018-07-18", "2018-07-19", "2018-07-20", "2018-07-23", "2018-07-24", "2018-07-25", "2018-07-26", "2018-07-27", "2018-07-30", "2018-07-31", "2018-08-01", "2018-08-02", "2018-08-03", "2018-08-06", "2018-08-07", "2018-08-08", "2018-08-09", "2018-08-10", "2018-08-13", "2018-08-14", "2018-08-15", "2018-08-16", "2018-08-17", "2018-08-20", "2018-08-21", "2018-08-22", "2018-08-23", "2018-08-24", "2018-08-27", "2018-08-28", "2018-08-29", "2018-08-30", "2018-08-31", "2018-09-04", "2018-09-05", "2018-09-06", "2018-09-07", "2018-09-10", "2018-09-11", "2018-09-12", "2018-09-13", "2018-09-14", "2018-09-17", "2018-09-18", "2018-09-19", "2018-09-20", "2018-09-21", "2018-09-24", "2018-09-25", "2018-09-26", "2018-09-27", "2018-09-28", "2018-10-01", "2018-10-02", "2018-10-03", "2018-10-04", "2018-10-05", "2018-10-08", "2018-10-09", "2018-10-10", "2018-10-11", "2018-10-12", "2018-10-15", "2018-10-16", "2018-10-17", "2018-10-18", "2018-10-19", "2018-10-22", "2018-10-23", "2018-10-24", "2018-10-25", "2018-10-26", "2018-10-29", "2018-10-30", "2018-10-31", "2018-11-01", "2018-11-02", "2018-11-05", "2018-11-06", "2018-11-07", "2018-11-08", "2018-11-09", "2018-11-12", "2018-11-13", "2018-11-14", "2018-11-15", "2018-11-16", "2018-11-19", "2018-11-20", "2018-11-21", "2018-11-23", "2018-11-26", "2018-11-27", "2018-11-28", "2018-11-29", "2018-11-30", "2018-12-03", "2018-12-04", "2018-12-06", "2018-12-07", "2018-12-10", "2018-12-11", "2018-12-12", "2018-12-13", "2018-12-14", "2018-12-17", "2018-12-18", "2018-12-19", "2018-12-20", "2018-12-21", "2018-12-24", "2018-12-26", "2018-12-27", "2018-12-28", "2018-12-31"], "MS": [1.0, 1.0085, 1.018, 1.0406, 1.0061, 1.0119, 1.0269, 1.0004, 1.0214, 1.0049, 1.0129, 1.0099, 1.0102, 1.0376, 1.033, 1.0175, 1.0066, 0.9871, 0.9901, 0.9837, 0.9791, 0.9827, 0.9807, 0.9689, 0.975, 0.9937, 1.0125, 1.0269, 1.044, 1.047, 1.0474, 1.0404, 1.0427, 1.0408, 1.0228, 1.0311, 1.041, 1.0309, 1.0243, 1.0055, 0.9476, 0.9668, 0.9511, 0.9714, 0.9778, 0.9632, 0.9846, 0.989, 0.9846, 0.9822, 0.9734, 0.9788, 0.9733, 0.9704, 0.963, 0.9469, 0.9463, 0.9444, 0.9274, 0.9091, 0.9065, 0.8951, 0.916, 0.8991, 0.9052, 0.8919, 0.8858, 0.8932, 0.9182, 0.9124, 0.9057, 0.9108, 0.912, 0.9275, 0.9329, 0.959, 0.9456, 0.9535, 0.9624, 0.967, 0.9681, 0.9672, 0.9683, 0.9655, 0.959, 0.9518, 0.9448, 0.9467, 0.9482, 0.9509, 0.9507, 0.9378, 0.9179, 0.8981, 0.9078, 0.9, 0.9162, 0.9175, 0.916, 0.9207, 0.9219, 0.9129, 0.9131, 0.9463, 0.9484, 0.9475, 0.9351, 0.9262, 0.9239, 0.9241, 0.9091, 0.9146, 0.9093, 0.9078, 0.9006, 0.9052, 0.9141, 0.9044, 0.9076, 0.9313, 0.9461, 0.9372, 0.9211, 0.9158, 0.9048, 0.9061, 0.8833, 0.8845, 0.8845, 0.8936, 0.8966, 0.8868, 0.8919, 0.8756, 0.8464, 0.8249, 0.8238, 0.8245, 0.8714, 0.8951, 0.8731, 0.8805, 0.8557, 0.8445, 0.8249, 0.845, 0.834, 0.8336, 0.8441, 0.8661, 0.8704, 0.8716, 0.8691, 0.8672, 0.8841, 0.8807, 0.8674, 0.8371, 0.8475, 0.8318, 0.8403, 0.8371, 0.8424, 0.8175, 0.8295, 0.8171, 0.8399, 0.8355, 0.8594, 0.8443, 0.842, 0.8613, 0.8179, 0.8082, 0.7838, 0.7722, 0.7705, 0.7741, 0.7701, 0.7519, 0.7511, 0.7566, 0.7454, 0.7381, 0.7147, 0.702, 0.7454, 0.7523, 0.7468, 0.7521], "GS": [1.0, 1.0131, 1.0213, 1.0342, 1.0106, 1.0196, 1.0373, 1.0226, 1.0495, 1.0346, 1.0426, 1.0254, 1.0269, 1.0276, 1.0186, 0.9973, 0.9804, 0.9672, 0.9706, 0.9695, 0.9635, 0.9568, 0.9462, 0.9436, 0.9498, 0.959, 0.9582, 0.9773, 0.9842, 0.9821, 0.9861, 0.9766, 0.9742, 0.9666, 0.9582, 0.961, 0.9622, 0.9614, 0.9545, 0.9501, 0.9178, 0.9265, 0.9132, 0.9232, 0.9294, 0.9231, 0.9389, 0.9438, 0.9436, 0.9464, 0.9405, 0.9453, 0.9446, 0.9376, 0.9355, 0.9231, 0.921, 0.9176, 0.9138, 0.8957, 0.8958, 0.8902, 0.9033, 0.8917, 0.9026, 0.891, 0.8924, 0.8967, 0.9217, 0.9171, 0.9123, 0.9186, 0.9153, 0.9357, 0.934, 0.9349, 0.9284, 0.9367, 0.9451, 0.9536, 0.9569, 0.9586, 0.9607, 0.966, 0.9599, 0.9543, 0.946, 0.9464, 0.9538, 0.9615, 0.9556, 0.9451, 0.9283, 0.9172, 0.9281, 0.9268, 0.942, 0.9435, 0.9532, 0.9648, 0.9676, 0.9555, 0.9505, 0.9808, 0.9799, 0.9759, 0.9679, 0.9614, 0.9608, 0.9604, 0.9481, 0.9457, 0.9376, 0.9307, 0.9224, 0.9231, 0.9268, 0.9213, 0.9254, 0.9524, 0.9598, 0.9514, 0.9416, 0.94, 0.9253, 0.9207, 0.9066, 0.911, 0.914, 0.9209, 0.9197, 0.9125, 0.9111, 0.9012, 0.8688, 0.861, 0.8646, 0.8701, 0.8963, 0.9229, 0.9094, 0.9176, 0.8959, 0.8836, 0.8457, 0.8652, 0.8585, 0.8672, 0.8865, 0.9111, 0.9176, 0.9286, 0.9247, 0.9226, 0.935, 0.9365, 0.9001, 0.833, 0.829, 0.8186, 0.8237, 0.8171, 0.8014, 0.7736, 0.7787, 0.7645, 0.7857, 0.7829, 0.8019, 0.7878, 0.7709, 0.7747, 0.7451, 0.7442, 0.7264, 0.723, 0.7148, 0.7144, 0.7112, 0.6985, 0.6792, 0.6933, 0.6843, 0.6809, 0.6471, 0.6321, 0.6587, 0.6687, 0.6591, 0.6754], "BAC": [1.0, 1.0096, 1.0194, 1.0345, 1.0109, 1.0191, 1.0399, 1.0201, 1.0457, 1.0167, 1.0212, 1.0249, 1.0075, 1.0297, 1.0324, 1.0345, 1.03, 1.0283, 1.0259, 1.0287, 1.0208, 1.0218, 1.0092, 0.9962, 0.9997, 1.0113, 1.0212, 1.0481, 1.0539, 1.0549, 1.0618, 1.0652, 1.0597, 1.0512, 1.0324, 1.0423, 1.0539, 1.0386, 1.0307, 1.029, 0.9881, 1.0061, 0.9908, 1.0031, 1.0031, 0.9935, 1.0249, 1.0266, 1.0239, 1.0256, 1.0201, 1.0181, 1.0065, 0.999, 1.0031, 0.9983, 0.9976, 0.9993, 0.9891, 0.9717, 0.9737, 0.9635, 0.9782, 0.9618, 0.9649, 0.9478, 0.9526, 0.9563, 0.9911, 0.9836, 0.9785, 0.9816, 0.9741, 1.016, 1.0239, 1.028, 1.0123, 1.028, 1.0491, 1.0519, 1.06, 1.0556, 1.0597, 1.0682, 1.0536, 1.0662, 1.0672, 1.0751, 1.0754, 1.0751, 1.085, 1.0781, 1.0641, 1.0399, 1.0505, 1.0358, 1.0481, 1.0488, 1.0532, 1.0583, 1.057, 1.0522, 1.0539, 1.0682, 1.0669, 1.0624, 1.058, 1.0553, 1.0624, 1.0638, 1.0525, 1.0529, 1.0515, 1.0525, 1.0382, 1.0283, 1.0362, 1.0331, 1.0307, 1.0577, 1.0641, 1.0587, 1.0488, 1.0464, 1.028, 1.0215, 1.0051, 1.0116, 1.0092, 1.0235, 1.0382, 1.0314, 1.0328, 1.0229, 0.9976, 0.9676, 0.971, 0.9526, 0.9734, 0.986, 0.9638, 0.9662, 0.9342, 0.9219, 0.8936, 0.9072, 0.9004, 0.9079, 0.9137, 0.9382, 0.9488, 0.9516, 0.9574, 0.9625, 0.9737, 0.985, 0.973, 0.9468, 0.9471, 0.9284, 0.9519, 0.9468, 0.9468, 0.9342, 0.9304, 0.9202, 0.9403, 0.9464, 0.97, 0.9567, 0.969, 0.9737, 0.9208, 0.8966, 0.8676, 0.8448, 0.8386, 0.8366, 0.8325, 0.8352, 0.8349, 0.8349, 0.825, 0.8226, 0.7973, 0.7755, 0.8226, 0.8315, 0.8321, 0.8407]}, "y24": {"dates": ["2024-06-05", "2024-06-06", "2024-06-07", "2024-06-10", "2024-06-11", "2024-06-12", "2024-06-13", "2024-06-14", "2024-06-17", "2024-06-18", "2024-06-20", "2024-06-21", "2024-06-24", "2024-06-25", "2024-06-26", "2024-06-27", "2024-06-28", "2024-07-01", "2024-07-02", "2024-07-03", "2024-07-05", "2024-07-08", "2024-07-09", "2024-07-10", "2024-07-11", "2024-07-12", "2024-07-15", "2024-07-16", "2024-07-17", "2024-07-18", "2024-07-19", "2024-07-22", "2024-07-23", "2024-07-24", "2024-07-25", "2024-07-26", "2024-07-29", "2024-07-30", "2024-07-31", "2024-08-01", "2024-08-02", "2024-08-05", "2024-08-06", "2024-08-07", "2024-08-08", "2024-08-09", "2024-08-12", "2024-08-13", "2024-08-14", "2024-08-15", "2024-08-16", "2024-08-19", "2024-08-20", "2024-08-21", "2024-08-22", "2024-08-23", "2024-08-26", "2024-08-27", "2024-08-28", "2024-08-29", "2024-08-30", "2024-09-03", "2024-09-04", "2024-09-05", "2024-09-06", "2024-09-09", "2024-09-10", "2024-09-11", "2024-09-12", "2024-09-13", "2024-09-16", "2024-09-17", "2024-09-18", "2024-09-19", "2024-09-20", "2024-09-23", "2024-09-24", "2024-09-25", "2024-09-26", "2024-09-27", "2024-09-30", "2024-10-01", "2024-10-02", "2024-10-03", "2024-10-04", "2024-10-07", "2024-10-08", "2024-10-09", "2024-10-10", "2024-10-11", "2024-10-14", "2024-10-15", "2024-10-16", "2024-10-17", "2024-10-18", "2024-10-21", "2024-10-22", "2024-10-23", "2024-10-24", "2024-10-25", "2024-10-28", "2024-10-29", "2024-10-30", "2024-10-31", "2024-11-01", "2024-11-04", "2024-11-05", "2024-11-06", "2024-11-07", "2024-11-08", "2024-11-11", "2024-11-12", "2024-11-13", "2024-11-14", "2024-11-15", "2024-11-18", "2024-11-19", "2024-11-20", "2024-11-21", "2024-11-22", "2024-11-25", "2024-11-26", "2024-11-27", "2024-11-29", "2024-12-02", "2024-12-03", "2024-12-04", "2024-12-05", "2024-12-06", "2024-12-09", "2024-12-10", "2024-12-11", "2024-12-12", "2024-12-13", "2024-12-16", "2024-12-17", "2024-12-18", "2024-12-19", "2024-12-20", "2024-12-23", "2024-12-24", "2024-12-26", "2024-12-27", "2024-12-30"], "ARM": [1.0, 1.0033, 0.9993, 1.0237, 1.053, 1.1384, 1.1564, 1.1553, 1.1728, 1.2741, 1.1763, 1.1729, 1.1054, 1.1752, 1.2052, 1.2214, 1.1972, 1.1621, 1.196, 1.231, 1.3257, 1.3514, 1.3337, 1.3643, 1.2672, 1.3257, 1.299, 1.308, 1.1831, 1.1585, 1.1956, 1.1967, 1.2563, 1.1537, 1.0912, 1.0902, 1.0349, 0.9729, 1.0549, 0.8891, 0.8301, 0.8082, 0.8297, 0.7836, 0.8665, 0.8561, 0.857, 0.9058, 0.9213, 0.9544, 0.9534, 0.9681, 0.9508, 0.96, 0.9491, 0.9924, 0.9431, 0.96, 0.917, 0.9653, 0.9723, 0.9054, 0.885, 0.9006, 0.8582, 0.9186, 0.9309, 1.0267, 1.0184, 1.0783, 1.0127, 1.0012, 1.0124, 1.0287, 1.0163, 1.037, 1.0485, 1.0714, 1.0914, 1.0652, 1.0464, 0.9957, 1.0026, 1.0115, 1.0284, 1.0342, 1.0507, 1.086, 1.0926, 1.1082, 1.184, 1.1024, 1.1158, 1.1312, 1.1197, 1.1147, 1.1164, 1.042, 1.032, 1.0518, 1.0977, 1.15, 1.1297, 1.0339, 1.0352, 1.0063, 1.0291, 1.0586, 1.1023, 1.0791, 1.0387, 1.0238, 0.9884, 0.9977, 0.9419, 0.9414, 0.9736, 0.9783, 0.9742, 0.995, 1.022, 1.0004, 0.9759, 0.9826, 1.0269, 1.0271, 1.0339, 1.0094, 1.0309, 1.0217, 1.0045, 1.0475, 1.0829, 1.1115, 1.0609, 1.0449, 0.9992, 0.9666, 0.9669, 0.9283, 0.9643, 0.9489, 0.9453, 0.9213], "DELL": [1.0, 0.9731, 0.9441, 0.9622, 0.9563, 0.9575, 0.9808, 0.9805, 1.0317, 1.0835, 1.0789, 1.0538, 0.9993, 1.0195, 1.0042, 1.0129, 1.0018, 1.0375, 1.0422, 1.0364, 1.0094, 1.0604, 1.0587, 1.0589, 1.0222, 1.0139, 0.9968, 0.9753, 0.9093, 0.9105, 0.9138, 0.9352, 0.9142, 0.8435, 0.8095, 0.8249, 0.8078, 0.789, 0.8258, 0.7877, 0.7431, 0.7132, 0.6877, 0.6385, 0.6644, 0.6723, 0.6921, 0.726, 0.7479, 0.8006, 0.8085, 0.8127, 0.8042, 0.8114, 0.7917, 0.8137, 0.8112, 0.8126, 0.8104, 0.8044, 0.8393, 0.8047, 0.7922, 0.7784, 0.741, 0.7692, 0.7747, 0.7904, 0.8147, 0.8303, 0.8383, 0.8486, 0.8426, 0.8555, 0.8536, 0.8541, 0.8522, 0.8729, 0.9189, 0.8733, 0.8611, 0.822, 0.8242, 0.8403, 0.8748, 0.8651, 0.8857, 0.8887, 0.9066, 0.9279, 0.9324, 0.9141, 0.9206, 0.9384, 0.9186, 0.9128, 0.8746, 0.868, 0.8759, 0.8902, 0.8765, 0.8836, 0.94, 0.8981, 0.9507, 0.9433, 0.9695, 1.005, 1.0015, 0.9751, 1.0062, 0.9914, 0.9773, 0.9765, 0.9563, 0.988, 0.9872, 0.9731, 1.0092, 1.0476, 1.0472, 1.0296, 0.9035, 0.9268, 0.9141, 0.9121, 0.916, 0.9085, 0.8964, 0.8994, 0.8484, 0.8622, 0.8658, 0.8605, 0.8664, 0.8592, 0.8185, 0.8133, 0.841, 0.8631, 0.864, 0.8665, 0.8523, 0.8341], "TSM": [1.0, 0.9948, 1.009, 1.0322, 1.0171, 1.0617, 1.0613, 1.0589, 1.0879, 1.1029, 1.0765, 1.0678, 1.03, 1.0594, 1.0562, 1.0535, 1.0668, 1.0578, 1.0784, 1.1201, 1.1293, 1.1455, 1.1326, 1.1727, 1.1325, 1.15, 1.1369, 1.1419, 1.0508, 1.0549, 1.0175, 1.0395, 1.0424, 0.9808, 0.9838, 0.994, 0.9821, 0.9486, 1.0177, 0.9709, 0.9198, 0.9081, 0.9538, 0.9516, 1.01, 1.0258, 1.0289, 1.0578, 1.0433, 1.0678, 1.0713, 1.0769, 1.056, 1.0523, 1.0216, 1.0513, 1.0377, 1.0468, 1.0385, 1.0382, 1.0539, 0.9851, 0.9874, 1.0048, 0.9626, 0.9991, 0.997, 1.0449, 1.0522, 1.0588, 1.0378, 1.0272, 1.0268, 1.0816, 1.0685, 1.0727, 1.1169, 1.1193, 1.1468, 1.0924, 1.066, 1.0562, 1.0791, 1.1016, 1.112, 1.1325, 1.142, 1.1487, 1.1403, 1.1712, 1.1798, 1.1486, 1.1507, 1.2634, 1.2324, 1.2396, 1.2183, 1.2329, 1.2149, 1.2487, 1.1949, 1.2088, 1.1937, 1.1695, 1.1843, 1.1758, 1.2016, 1.186, 1.2349, 1.235, 1.1911, 1.1771, 1.1457, 1.157, 1.1417, 1.1507, 1.1642, 1.1562, 1.1738, 1.1667, 1.136, 1.1284, 1.1121, 1.1334, 1.1932, 1.2208, 1.2318, 1.254, 1.2461, 1.2225, 1.1781, 1.1945, 1.1752, 1.2337, 1.2412, 1.2316, 1.2003, 1.1947, 1.2105, 1.2728, 1.2664, 1.2464, 1.2376, 1.23], "NVDA": [1.0, 0.9882, 0.9873, 0.9947, 0.9875, 1.0225, 1.0586, 1.0771, 1.0697, 1.1073, 1.0681, 1.0337, 0.9646, 1.0298, 1.0323, 1.0127, 1.009, 1.0152, 1.0019, 1.0477, 1.0277, 1.047, 1.073, 1.1018, 1.0405, 1.0555, 1.049, 1.032, 0.9637, 0.989, 0.9632, 1.009, 1.0012, 0.9331, 0.917, 0.9234, 0.9114, 0.8472, 0.9557, 0.8919, 0.8761, 0.8204, 0.8514, 0.8078, 0.8573, 0.8555, 0.8904, 0.9485, 0.9644, 1.0034, 1.0175, 1.0617, 1.0393, 1.0495, 1.0106, 1.0566, 1.0328, 1.0479, 1.0259, 0.9604, 0.9749, 0.8821, 0.8674, 0.8756, 0.8398, 0.8696, 0.8829, 0.9548, 0.973, 0.9727, 0.9538, 0.9441, 0.9259, 0.9627, 0.9474, 0.9495, 0.9872, 1.0087, 1.0131, 0.9915, 0.9918, 0.9556, 0.9707, 1.0033, 1.0203, 1.0431, 1.0853, 1.0834, 1.101, 1.1009, 1.1277, 1.0748, 1.1085, 1.1183, 1.1271, 1.1737, 1.1727, 1.1398, 1.1468, 1.156, 1.1477, 1.1536, 1.138, 1.0843, 1.1058, 1.1112, 1.1427, 1.1892, 1.2159, 1.2057, 1.1864, 1.2111, 1.1946, 1.1986, 1.1596, 1.1446, 1.2007, 1.1915, 1.1979, 1.1593, 1.1109, 1.1183, 1.1054, 1.1291, 1.1322, 1.1455, 1.1854, 1.1847, 1.1633, 1.1337, 1.1032, 1.1378, 1.1217, 1.0965, 1.0781, 1.0649, 1.0528, 1.0673, 1.1001, 1.1407, 1.1452, 1.1428, 1.119, 1.1229], "TSLA": [1.0, 1.0168, 1.0142, 0.9931, 0.9752, 1.0131, 1.0427, 1.0172, 1.0711, 1.0563, 1.0375, 1.0458, 1.0433, 1.0706, 1.1221, 1.1281, 1.1307, 1.1992, 1.3215, 1.4079, 1.4373, 1.4454, 1.499, 1.5043, 1.3773, 1.4185, 1.4437, 1.4661, 1.42, 1.4242, 1.3669, 1.4372, 1.4079, 1.2342, 1.2586, 1.256, 1.3263, 1.2721, 1.3261, 1.2392, 1.1867, 1.1365, 1.1465, 1.0958, 1.1362, 1.1429, 1.1285, 1.1876, 1.1507, 1.2237, 1.235, 1.2727, 1.2634, 1.2758, 1.2038, 1.259, 1.2183, 1.1955, 1.1757, 1.1787, 1.2235, 1.2034, 1.2538, 1.3153, 1.2042, 1.2358, 1.2924, 1.3036, 1.3132, 1.3159, 1.2959, 1.3021, 1.2983, 1.3938, 1.3614, 1.4286, 1.453, 1.4687, 1.4527, 1.4883, 1.495, 1.4744, 1.423, 1.3752, 1.429, 1.3762, 1.3971, 1.3774, 1.3644, 1.2446, 1.2523, 1.2547, 1.2647, 1.2622, 1.2611, 1.2506, 1.2455, 1.2209, 1.4885, 1.5382, 1.5001, 1.483, 1.4717, 1.4277, 1.4227, 1.3877, 1.4368, 1.6487, 1.6966, 1.8355, 2.0, 1.8771, 1.8871, 1.7782, 1.8327, 1.9357, 1.9771, 1.9545, 1.9408, 2.0146, 1.9348, 1.9327, 1.9022, 1.9723, 2.0405, 2.0081, 2.0453, 2.1114, 2.2241, 2.2274, 2.2914, 2.4273, 2.3891, 2.4927, 2.6458, 2.7421, 2.515, 2.4924, 2.4061, 2.4606, 2.6416, 2.595, 2.4666, 2.3852], "SMCI": [1.0, 0.9693, 0.9584, 0.9805, 0.9565, 0.9654, 1.0855, 1.0524, 1.1058, 1.1464, 1.1434, 1.128, 1.0305, 1.0506, 1.0357, 1.1095, 1.021, 1.0122, 1.0432, 1.0554, 1.0549, 1.1206, 1.116, 1.1214, 1.108, 1.1339, 1.1186, 1.0928, 1.0172, 0.9989, 0.9928, 0.9798, 0.976, 0.8867, 0.8668, 0.8874, 0.8694, 0.8303, 0.8743, 0.8377, 0.7784, 0.7586, 0.7688, 0.6139, 0.6354, 0.634, 0.6741, 0.7071, 0.7191, 0.7809, 0.7835, 0.7771, 0.7612, 0.7773, 0.7537, 0.7641, 0.7009, 0.6824, 0.5526, 0.5593, 0.5454, 0.5505, 0.5277, 0.5166, 0.4816, 0.5107, 0.5143, 0.555, 0.5509, 0.5697, 0.5596, 0.5475, 0.5444, 0.5448, 0.5698, 0.5806, 0.5777, 0.5709, 0.5014, 0.523, 0.5189, 0.5053, 0.5234, 0.5177, 0.5138, 0.5949, 0.5651, 0.5893, 0.5791, 0.5956, 0.5905, 0.5951, 0.6075, 0.593, 0.5889, 0.5956, 0.5728, 0.5652, 0.5761, 0.589, 0.5946, 0.6121, 0.4121, 0.3627, 0.3246, 0.3244, 0.3452, 0.2829, 0.3175, 0.3055, 0.2895, 0.2704, 0.2533, 0.2244, 0.2315, 0.2684, 0.3523, 0.3215, 0.3701, 0.4131, 0.4786, 0.429, 0.437, 0.4067, 0.5234, 0.501, 0.521, 0.5126, 0.5474, 0.5503, 0.5052, 0.4771, 0.4726, 0.4542, 0.4167, 0.4212, 0.4016, 0.3893, 0.3936, 0.4037, 0.4278, 0.4204, 0.3985, 0.3823]}, "mc": {"1y": {"fv": 100.07656329982947, "pko": 0.59757, "pko_by": [0.34563, 0.1135, 0.06082, 0.04581, 0.03181], "pki": 0.07247, "ploss": 0.07247, "eloss": 28.93173061377768, "q05": -21.780593432314163, "q01": -29.7478937860715, "hist": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 2, 5, 7, 24, 30, 78, 120, 253, 414, 621, 874, 1155, 1312, 849, 541, 376, 234, 130, 92, 54, 31, 16, 10, 8, 45920, 10664, 36177], "tot_mean": 0.8299508157528646}, "3m": {"fv": 97.09584143197726, "pko": 0.61342, "pko_by": [0.36764, 0.11228, 0.05972, 0.04368, 0.0301], "pki": 0.17118, "ploss": 0.17045, "eloss": 29.654484148094078, "q05": -29.162025958889853, "q01": -38.1946234228857, "hist": [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 7, 13, 22, 26, 73, 93, 177, 257, 364, 587, 743, 952, 1135, 1331, 1587, 1900, 1812, 1420, 1116, 851, 695, 504, 352, 295, 201, 178, 121, 103, 48067, 10375, 24639], "tot_mean": -2.2078901563759694}}, "dec": {"fv": 97.096, "bond_leg": 102.087, "put": 4.991, "margin": 2.904, "coupon_pv": 2.828, "principal_pv": 99.259}};
+
+/* ===== motion engine (deck-craft template) ===== */
+const FPS = 60;
+const Easing = { linear: t => t, outExpo: t => (t >= 1 ? 1 : 1 - Math.pow(2, -10 * t)), inOutCubic: t => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2) };
+function interpolate(f, inR, outR, opts = {}) {
+    const e = opts.easing || Easing.linear;
+    if (f <= inR[0]) return outR[0]; if (f >= inR[1]) return outR[1];
+    return outR[0] + (outR[1] - outR[0]) * e((f - inR[0]) / (inR[1] - inR[0]));
+}
+function spring(frame, { delay = 0, damping = 18, stiffness = 120, mass = 1 } = {}) {
+    const t = Math.max(0, frame - delay) / FPS; if (t === 0) return 0;
+    const w0 = Math.sqrt(stiffness / mass), z = damping / (2 * Math.sqrt(stiffness * mass));
+    if (z < 1) { const wd = w0 * Math.sqrt(1 - z * z); return 1 - Math.exp(-z * w0 * t) * (Math.cos(wd * t) + (z * w0 / wd) * Math.sin(wd * t)); }
+    return 1 - Math.exp(-w0 * t) * (1 + w0 * t);
+}
+function drawPath(p, k) { if (!p._len) p._len = p.getTotalLength(); p.style.strokeDasharray = p._len; p.style.strokeDashoffset = p._len * (1 - k); }
+const fmt = (v, d = 0) => v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+function autoRender(f, s) {
+    s.querySelectorAll('[data-in]').forEach(el => {
+        const p = spring(f, { delay: +el.dataset.in }), o = Math.min(1, Math.max(0, p * 1.4)), fx = el.dataset.fx;
+        if (fx === 'mask') { el.style.transform = `translateY(${(1 - p) * 110}%)`; return; }
+        el.style.opacity = o;
+        if (fx === 'left') el.style.transform = `translateX(${(1 - p) * -60}px)`;
+        else if (fx === 'right') el.style.transform = `translateX(${(1 - p) * 60}px)`;
+        else if (fx === 'scale') el.style.transform = `scale(${.6 + .4 * p})`;
+        else if (fx !== 'fade') el.style.transform = `translateY(${(1 - p) * 34}px)`;
+    });
+    s.querySelectorAll('[data-count]').forEach(el => {
+        const at = +(el.dataset.at || 0), len = +(el.dataset.len || 60);
+        const v = interpolate(f, [at, at + len], [0, +el.dataset.count], { easing: Easing.outExpo });
+        el.innerHTML = (el.dataset.pre || '') + fmt(v, +(el.dataset.d || 0)) + (el.dataset.suf || '');
+    });
+    s.querySelectorAll('[data-grow]').forEach(el => {
+        const p = spring(f, { delay: +(el.dataset.at || 0), damping: 22 }) * +el.dataset.grow;
+        el.style.transform = el.dataset.axis === 'y' ? `scaleY(${p})` : `scaleX(${p})`;
+    });
+    s.querySelectorAll('[data-draw]').forEach(el => {
+        const at = +(el.dataset.at || 0), len = +(el.dataset.len || 90);
+        drawPath(el, interpolate(f, [at, at + len], [0, 1], { easing: Easing.inOutCubic }));
+    });
+}
+
+/* ===== chart helpers ===== */
+const NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+const txt = (parent, x, y, s, attrs = {}) => { const t = el('text', { x, y, ...attrs }, parent); t.textContent = s; return t; };
+const pct = (v, d = 1) => (v * 100).toFixed(d) + '%';
+const MINUS = '−';
+
+/* Normalised price paths with level lines, life window, observation ticks, end labels, callouts. */
+function pathChart(svg, { dates, series, levels = [], win, obs = [], ymin, ymax, step = .1, notes = [], labelW = 210, bandLabel = '商品存續期間', bands = [] }) {
+    const W = +svg.viewBox.baseVal.width, H = +svg.viewBox.baseVal.height;
+    const L = 96, R = W - labelW, T = 30, B = H - 56, n = dates.length;
+    const X = i => L + (R - L) * i / (n - 1), Y = v => B - (B - T) * (v - ymin) / (ymax - ymin);
+    const idx = d => { const k = dates.findIndex(x => x >= d); return k < 0 ? n - 1 : k; };
+    if (win) {
+        el('rect', { x: X(idx(win[0])), y: T, width: X(idx(win[1])) - X(idx(win[0])), height: B - T, fill: 'var(--ink)', opacity: .06 }, svg);
+        txt(svg, X(idx(win[0])) + 12, T + 32, bandLabel, { class: 'lbl-s', 'data-in': 10, 'data-fx': 'fade' });
+    }
+    bands.forEach(b => {
+        el('rect', { x: L, width: R - L, y: Y(b.hi), height: Y(b.lo) - Y(b.hi), fill: b.fill, opacity: b.op || .12 }, svg);
+        if (b.label) txt(svg, b.at != null ? L + 10 + (R - L) * b.at : R - 10, b.above ? Y(b.hi) - 12 : b.below ? Y(b.lo) + 30 : Y(b.lo) - 10, b.label, { class: 'lbl-b', fill: b.color, 'text-anchor': b.at != null ? 'start' : 'end', 'data-in': 18, 'data-fx': 'fade', stroke: 'var(--paper)', 'stroke-width': 8, 'paint-order': 'stroke' });
+    });
+    for (let v = ymin; v <= ymax + 1e-9; v += step) {
+        el('line', { x1: L, x2: R, y1: Y(v), y2: Y(v), class: 'ax', 'stroke-dasharray': '2 6' }, svg);
+        txt(svg, L - 14, Y(v) + 7, Math.round(v * 100) + '%', { 'text-anchor': 'end', class: 'axl' });
+    }
+    let lastM = '';
+    dates.forEach((d, i) => { const m = d.slice(0, 7); if (m !== lastM) { lastM = m; txt(svg, X(i), B + 38, (+d.slice(5, 7)) + '月', { 'text-anchor': 'middle', class: 'axl' }); } });
+    obs.forEach(d => el('line', { x1: X(idx(d)), x2: X(idx(d)), y1: B, y2: B - 18, stroke: 'var(--ink)', 'stroke-width': 3, 'data-in': 30, 'data-fx': 'fade' }, svg));
+    levels.forEach(lv => {
+        el('line', { x1: L, x2: R, y1: Y(lv.v), y2: Y(lv.v), stroke: lv.color, 'stroke-width': 2.5, 'stroke-dasharray': '10 7', 'data-in': 14, 'data-fx': 'fade' }, svg);
+        const lx = lv.x != null ? lv.x : R - 10;
+        const t = txt(svg, lx, Y(lv.v) + (lv.below ? 32 : -12), lv.label, { class: 'lbl-b', fill: lv.color, 'text-anchor': lv.x != null ? 'start' : 'end', 'data-in': 18, 'data-fx': 'fade',
+            stroke: 'var(--paper)', 'stroke-width': 8, 'paint-order': 'stroke', 'stroke-linejoin': 'round' });
+    });
+    const order = [...series].sort((a, b) => (a.hero ? 1 : 0) - (b.hero ? 1 : 0));
+    order.forEach((s, k) => {
+        const d = s.values.map((v, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(Math.max(ymin, Math.min(ymax, v))).toFixed(1)).join('');
+        el('path', { d, fill: 'none', stroke: s.hero ? 'var(--hero)' : (s.color || 'var(--peer)'), 'stroke-width': s.hero ? 4.5 : 2.4, 'stroke-linejoin': 'round', 'data-draw': '', 'data-at': 26 + k * 8, 'data-len': 120 }, svg);
+    });
+    const labs = series.map(s => ({ s, y: Y(Math.max(ymin, Math.min(ymax, s.values[n - 1]))) })).sort((a, b) => a.y - b.y);
+    for (let i = 1; i < labs.length; i++) labs[i].y = Math.max(labs[i].y, labs[i - 1].y + 32);
+    labs.forEach(({ s, y }) => txt(svg, R + 14, y + 8, `${s.name} ${Math.round(s.values[n - 1] * 100)}%`, { 'data-in': 150, 'data-fx': 'fade',
+        style: `font: ${s.hero ? 700 : 500} 24px var(--f-body); fill: ${s.hero ? 'var(--hero)' : 'var(--muted)'}` }));
+    notes.forEach(nt => {
+        const x = nt.i != null ? X(nt.i) : X(idx(nt.d)), y = Y(nt.v);
+        el('circle', { cx: x, cy: y, r: 8, fill: nt.color || 'var(--hero)', 'data-in': nt.at || 150, 'data-fx': 'scale' }, svg);
+        (Array.isArray(nt.text) ? nt.text : [nt.text]).forEach((line, j) =>
+            txt(svg, x + (nt.dx || 14), y + (nt.dy || 6) + j * 32, line, { 'text-anchor': nt.anchor || 'start', class: 'lbl-b', fill: nt.color || 'var(--hero)',
+                stroke: 'var(--paper)', 'stroke-width': 8, 'paint-order': 'stroke', 'data-in': (nt.at || 150) + 6, 'data-fx': 'fade' }));
+    });
+    return { X, Y, idx };
+}
+
+/* ---------- 06 timeline ---------- */
+(() => {
+    const U = DATA.ubs, svg = document.getElementById('timeline');
+    const kiDays = U.dates.filter(d => d >= '2018-04-09' && d <= '2018-10-09').length;
+    document.getElementById('kiDays').textContent = kiDays;
+    const t0 = Date.parse('2018-03-30'), t1 = Date.parse('2018-10-16'), L = 40, R = 1640, X = d => L + (R - L) * (Date.parse(d) - t0) / (t1 - t0);
+    const yA = 300;
+    el('line', { x1: L, x2: R, y1: yA, y2: yA, stroke: 'var(--ink)', 'stroke-width': 3, 'data-draw': '', 'data-at': 8, 'data-len': 60 }, svg);
+    // KI watch band
+    el('rect', { x: X('2018-04-09'), y: yA + 70, width: X('2018-10-09') - X('2018-04-09'), height: 56, fill: 'var(--down)', 'fill-opacity': .14, 'data-in': 60, 'data-fx': 'fade' }, svg);
+    txt(svg, X('2018-04-09') + 16, yA + 107, `下限價 72%：每日收盤觀察（${kiDays} 個交易日）`, { class: 'lbl-b', fill: 'var(--down)', 'data-in': 64, 'data-fx': 'fade' });
+    const ev = [
+        ['2018-04-02', '期初訂價', '4/2', 'ink', -1], ['2018-04-09', '發行', '4/9', 'ink', 1],
+        ['2018-05-09', '配息＋出場', '5/9', 'hero', -1], ['2018-06-11', '配息＋出場', '6/11', 'hero', -1], ['2018-07-09', '配息＋出場', '7/9', 'hero', -1],
+        ['2018-08-09', '配息＋出場', '8/9', 'hero', -1], ['2018-09-10', '配息＋出場', '9/10', 'hero', -1],
+        ['2018-10-09', '期末訂價（只配息）', '10/9', 'ink', -1], ['2018-10-12', '到期交割', '10/12', 'ink', 1]];
+    ev.forEach(([d, lab, md, c, side], k) => {
+        const x = X(d), at = 16 + k * 6, col = c === 'hero' ? 'var(--hero)' : 'var(--ink)';
+        el('circle', { cx: x, cy: yA, r: c === 'hero' ? 13 : 10, fill: col, 'data-in': at, 'data-fx': 'scale' }, svg);
+        const ty = side < 0 ? yA - 44 : yA + 190;
+        txt(svg, x, ty, md, { 'text-anchor': 'middle', class: 'lbl-m', fill: col, 'data-in': at + 4, 'data-fx': 'fade' });
+        txt(svg, x, ty + (side < 0 ? -40 : 40), lab, { 'text-anchor': 'middle', style: 'font: 500 24px var(--f-body); fill: var(--muted)', 'data-in': at + 4, 'data-fx': 'fade' });
+    });
+    txt(svg, X('2018-07-09'), 120, '5 個提前出場觀察日 = 前 5 個配息觀察日', { 'text-anchor': 'middle', class: 'lbl-b', fill: 'var(--hero)', 'data-in': 80, 'data-fx': 'fade' });
+})();
+
+/* ---------- 08 waterfall ---------- */
+(() => {
+    const D = DATA.dec, svg = document.getElementById('waterfall');
+    const W = 1686, H = 560, L = 90, R = W - 20, T = 40, B = H - 90, lo = 90, hi = 104;
+    const Y = v => B - (B - T) * (v - lo) / (hi - lo);
+    for (let v = lo; v <= hi; v += 2) { el('line', { x1: L, x2: R, y1: Y(v), y2: Y(v), class: 'ax', 'stroke-dasharray': '2 6' }, svg); txt(svg, L - 14, Y(v) + 7, v, { 'text-anchor': 'end', class: 'axl' }); }
+    const bond = D.principal_pv + D.coupon_pv;
+    const steps = [
+        ['本金現值', lo, D.principal_pv, 'ink', D.principal_pv.toFixed(1)],
+        ['＋配息現值', D.principal_pv, bond, 'ink', '+' + D.coupon_pv.toFixed(1)],
+        ['＝債券部分', lo, bond, 'tot', bond.toFixed(1)],
+        ['－賣出賣權', D.fv, bond, 'hero', MINUS + D.put.toFixed(1)],
+        ['＝商品價值', lo, D.fv, 'tot', D.fv.toFixed(1)],
+        ['＋發行商與通路', D.fv, 100, 'gold', '+' + D.margin.toFixed(1)],
+        ['＝客戶付', lo, 100, 'tot', '100.0'],
+    ];
+    const bw = 150, gap = (R - L - bw * steps.length) / (steps.length + 1);
+    steps.forEach(([lab, a, b, k, v], i) => {
+        const x = L + gap + i * (bw + gap), at = 20 + i * 12;
+        const fill = k === 'hero' ? 'var(--hero)' : k === 'gold' ? 'var(--accent-2)' : k === 'tot' ? 'var(--ink)' : '#8c857e';
+        const g = el('g', { 'data-in': at, 'data-fx': 'fade' }, svg);
+        el('rect', { x, y: Y(Math.max(a, b)), width: bw, height: Math.abs(Y(a) - Y(b)), fill, opacity: k === 'tot' ? 1 : .95 }, g);
+        txt(g, x + bw / 2, Y(Math.max(a, b)) - 14, v, { 'text-anchor': 'middle', class: 'lbl-m', fill: k === 'hero' ? 'var(--hero)' : 'var(--ink)' });
+        txt(g, x + bw / 2, B + 42, lab, { 'text-anchor': 'middle', style: 'font: 700 26px var(--f-body); fill: var(--ink)' });
+        if (i < steps.length - 1) {
+            const nb = steps[i + 1], lvl = k === 'hero' ? a : b;
+            el('line', { x1: x + bw, x2: x + bw + gap, y1: Y(lvl), y2: Y(lvl), stroke: 'var(--muted)', 'stroke-dasharray': '4 4', 'stroke-width': 1.5 }, g);
+        }
+    });
+})();
+
+/* ---------- 10 payoff ---------- */
+(() => {
+    const svg = document.getElementById('payoff'), W = 1686, H = 640, L = 110, R = W - 300, T = 30, B = H - 70;
+    const x0 = .4, x1 = 1.3, y0 = -.6, y1 = .35, cp = .05;
+    const X = v => L + (R - L) * (v - x0) / (x1 - x0), Y = v => B - (B - T) * (v - y0) / (y1 - y0);
+    for (let v = y0; v <= y1 + 1e-9; v += .1) { el('line', { x1: L, x2: R, y1: Y(v), y2: Y(v), class: 'ax', 'stroke-dasharray': Math.abs(v) < 1e-9 ? '' : '2 6', stroke: Math.abs(v) < 1e-9 ? 'var(--ink)' : '' }, svg); txt(svg, L - 14, Y(v) + 7, (v > 1e-9 ? '+' : v < -1e-9 ? MINUS : '') + Math.round(Math.abs(v) * 100) + '%', { 'text-anchor': 'end', class: 'axl' }); }
+    for (let v = .4; v <= 1.3 + 1e-9; v += .1) txt(svg, X(v), B + 36, Math.round(v * 100) + '%', { 'text-anchor': 'middle', class: 'axl' });
+    txt(svg, (L + R) / 2, B + 70, '到期時最差那檔的表現（到期價 ÷ 期初價）', { 'text-anchor': 'middle', class: 'axt' });
+    // KI zone
+    el('rect', { x: X(x0), y: T, width: X(.72) - X(x0), height: B - T, fill: 'var(--down)', opacity: .08 }, svg);
+    el('line', { x1: X(.72), x2: X(.72), y1: T, y2: B, stroke: 'var(--down)', 'stroke-width': 2.5, 'stroke-dasharray': '10 7' }, svg);
+    txt(svg, X(.72) - 12, T + 30, '下限價 72%', { 'text-anchor': 'end', class: 'lbl-b', fill: 'var(--down)' });
+    el('line', { x1: X(1), x2: X(1), y1: T, y2: B, stroke: 'var(--ink)', 'stroke-width': 2, 'stroke-dasharray': '10 7' }, svg);
+    txt(svg, X(1) + 12, T + 30, '轉換價 100%', { class: 'lbl-b', fill: 'var(--ink)' });
+    const path = (f, a, b) => { let d = ''; for (let k = 0; k <= 180; k++) { const v = a + (b - a) * k / 180; d += (k ? 'L' : 'M') + X(v).toFixed(1) + ' ' + Y(f(v)).toFixed(1); } return d; };
+    el('path', { d: path(v => v - 1, x0, x1), fill: 'none', stroke: 'var(--peer)', 'stroke-width': 2.5, 'stroke-dasharray': '8 6', 'data-draw': '', 'data-at': 20, 'data-len': 80 }, svg);
+    el('path', { d: path(() => cp, .72, x1), fill: 'none', stroke: 'var(--ink)', 'stroke-width': 4, 'data-draw': '', 'data-at': 40, 'data-len': 80 }, svg);
+    el('path', { d: path(v => Math.min(v - 1, 0) + cp, x0, x1), fill: 'none', stroke: 'var(--hero)', 'stroke-width': 5, 'data-draw': '', 'data-at': 70, 'data-len': 100 }, svg);
+    const lab = (x, y, s, c, a = 'start', at = 150) => txt(svg, x, y, s, { class: 'lbl-b', fill: c, 'text-anchor': a, 'data-in': at, 'data-fx': 'fade', stroke: 'var(--paper)', 'stroke-width': 8, 'paint-order': 'stroke' });
+    lab(R + 16, Y(cp) - 4, '從未觸及下限', 'var(--ink)'); lab(R + 16, Y(cp) + 26, '曾觸及、但 ≥ 100%', 'var(--ink)'); lab(R + 16, Y(cp) + 56, '→ 都是 +5%', 'var(--ink)');
+    lab(R + 16, Y(.3) + 8, '直接持有股票', 'var(--muted)');
+    lab(X(.6), Y(.6 - 1 + cp) + 50, '曾觸及下限 → 換股', 'var(--hero)');
+    el('circle', { cx: X(.95), cy: Y(0), r: 9, fill: 'var(--hero)', 'data-in': 170, 'data-fx': 'scale' }, svg);
+    lab(X(.95) + 16, Y(0) + 44, '損益兩平：最差股 95%', 'var(--hero)', 'start', 176);
+})();
+
+/* ---------- 11 memory KO table ---------- */
+(() => {
+    const U = DATA.ubs, obs = ['2018-05-09', '2018-06-11', '2018-07-09', '2018-08-09', '2018-09-10', '2018-10-09'];
+    const names = { MS: '摩根士丹利', GS: '高盛', BAC: '美國銀行' };
+    let h = '<thead><tr><th></th>' + obs.map((d, i) => `<th>${+d.slice(5, 7)}/${+d.slice(8)}${i === 5 ? '<br>期末' : ''}</th>`).join('') + '</tr></thead><tbody>';
+    ['MS', 'GS', 'BAC'].forEach(t => {
+        let locked = false;
+        h += `<tr><td>${names[t]} ${t}</td>`;
+        obs.forEach((d, i) => {
+            const v = U[t][U.dates.indexOf(d)], hit = v >= 1 && i < 5;
+            const style = hit ? 'background:var(--hero);color:#fff;font-weight:700' : (locked && i < 5 ? 'color:var(--hero)' : (t === 'GS' ? 'font-weight:700' : ''));
+            h += `<td style="${style}">${(v * 100).toFixed(1)}${locked && !hit && i < 5 ? '<span style="font:500 20px var(--f-body)"> 已鎖</span>' : ''}</td>`;
+            if (hit) locked = true;
+        });
+        h += '</tr>';
+    });
+    h += '<tr><td style="font:500 24px var(--f-body);color:var(--muted)">是否出場</td>' + obs.map((d, i) => `<td style="font:500 24px var(--f-body);color:var(--muted)">${i < 5 ? '否' : '—'}</td>`).join('') + '</tr></tbody>';
+    document.getElementById('koTable').innerHTML = h;
+})();
+
+/* ---------- 12 replay 2018 ---------- */
+(() => {
+    const U = DATA.ubs, i1009 = U.dates.indexOf('2018-10-09'), i1224 = U.dates.indexOf('2018-12-24'), i1211 = U.dates.indexOf('2018-12-11');
+    pathChart(document.getElementById('ubsPath'), {
+        dates: U.dates, ymin: .6, ymax: 1.1,
+        series: [{ name: 'BAC', values: U.BAC }, { name: 'MS', values: U.MS }, { name: 'GS', values: U.GS, hero: true }],
+        levels: [{ v: 1, label: '提前出場價 ＝ 轉換價 100%', color: 'var(--ink)' }, { v: .72, label: '下限價 72%（每日收盤觀察）', color: 'var(--down)', below: true, x: 110 }],
+        win: ['2018-04-09', '2018-10-09'], obs: ['2018-05-09', '2018-06-11', '2018-07-09', '2018-08-09', '2018-09-10', '2018-10-09'],
+        notes: [{ i: i1009, v: U.MS[i1009], text: ['到期 10/9：MS 87.6%', '未觸及下限 → 本金全還'], anchor: 'end', dx: -18, dy: 50, color: 'var(--ink)', at: 150 },
+                { i: i1211, v: U.GS[i1211], text: ['12/11 GS 跌破 72%'], anchor: 'end', dx: -18, dy: -14, at: 170 },
+                { i: i1224, v: U.GS[i1224], text: ['12/24 低點 63%'], anchor: 'end', dx: -18, dy: 10, at: 180 }]
+    });
+})();
+
+/* ---------- 14 Monte Carlo ---------- */
+(() => {
+    const M = DATA.mc['3m'], box = document.getElementById('mcStack');
+    const pKO = M.pko, pLoss = M.ploss, pPar = 1 - pKO - pLoss;
+    const rows = [
+        ['提前出場', pKO, 'var(--ink)', `其中第 1 個月就出場 ${pct(M.pko_by[0])}`],
+        ['到期還本', pPar, '#8c857e', '撐滿 6 個月、本金全還'],
+        ['到期接股票', pLoss, 'var(--hero)', `接到時平均本金損失 ${M.eloss.toFixed(1)}%`],
+    ];
+    box.innerHTML = rows.map(([lab, p, c, d], i) => `
+        <div style="padding:22px 0;border-top:${i ? 1 : 2}px solid ${i ? 'var(--rule)' : 'var(--ink)'}" data-in="${14 + i * 10}">
+            <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font:700 32px var(--f-body);color:${c === 'var(--hero)' ? 'var(--hero)' : 'var(--ink)'}">${lab}</span>
+                <span style="font:700 60px var(--f-mono);color:${c === 'var(--hero)' ? 'var(--hero)' : 'var(--ink)'}">${(p * 100).toFixed(1)}<small style="font-size:.5em">%</small></span></div>
+            <div style="height:16px;background:var(--paper-2);margin-top:10px"><div data-grow="${p}" data-at="${24 + i * 10}" style="height:100%;width:100%;background:${c};transform-origin:0 50%"></div></div>
+            <div style="font:400 26px var(--f-body);color:var(--muted);margin-top:10px">${d}</div></div>`).join('');
+    // histogram of total return for losing scenarios
+    const svg = document.getElementById('mcHist'), W = 990, H = 560, L = 80, R = W - 20, T = 70, B = H - 70;
+    const edges = [], counts = M.hist; for (let e = -80; e <= 6; e += 2) edges.push(e);
+    const nb = 40, sub = counts.slice(0, nb), mx = Math.max(...sub), N = counts.reduce((a, b) => a + b, 0);
+    const X = e => L + (R - L) * (e + 80) / 80, Y = c => B - (B - T) * c / (mx * 1.1);
+    txt(svg, L, 30, `總報酬 < 0 的情境（共 ${(sub.reduce((a, b) => a + b, 0) / N * 100).toFixed(1)}%）的分布`, { class: 'lbl-b', fill: 'var(--ink)' });
+    for (let k = 0; k <= 4; k++) { const c = mx * 1.1 * k / 4, y = Y(c); el('line', { x1: L, x2: R, y1: y, y2: y, class: 'ax', 'stroke-dasharray': k ? '2 6' : '' }, svg); txt(svg, L - 12, y + 7, (c / N * 100).toFixed(1) + '%', { 'text-anchor': 'end', class: 'axl' }); }
+    sub.forEach((c, i) => {
+        const x = X(edges[i]) + 2, w = X(edges[i + 1]) - X(edges[i]) - 4;
+        el('rect', { x, y: Y(c), width: w, height: B - Y(c), fill: 'var(--hero)', opacity: .85, 'data-in': 40 + i, 'data-fx': 'fade' }, svg);
+    });
+    for (let e = -80; e <= 0; e += 10) txt(svg, X(e), B + 36, (e < 0 ? MINUS : '') + Math.abs(e) + '%', { 'text-anchor': 'middle', class: 'axl' });
+    const q = M.q05; el('line', { x1: X(q), x2: X(q), y1: T - 10, y2: B, stroke: 'var(--ink)', 'stroke-width': 2, 'stroke-dasharray': '8 6', 'data-in': 100, 'data-fx': 'fade' }, svg);
+    txt(svg, X(q) - 12, T + 20, `最差 5% 情境：${MINUS}${Math.abs(q).toFixed(1)}% 以下`, { 'text-anchor': 'end', class: 'lbl-b', fill: 'var(--ink)', 'data-in': 104, 'data-fx': 'fade' });
+    txt(svg, (L + R) / 2, B + 66, '總報酬（含已領配息）', { 'text-anchor': 'middle', class: 'axt' });
+})();
+
+/* ---------- 15 sensitivity ---------- */
+(() => {
+    const svg = document.getElementById('volLine'), W = 640, H = 520, L = 90, R = W - 30, T = 70, B = H - 80;
+    const pts = [[18, 101.515], [22, 100.255], [26, 98.477], [30, 96.604], [34, 94.731]];
+    const X = v => L + (R - L) * (v - 18) / 16, Y = v => B - (B - T) * (v - 94) / 8;
+    txt(svg, 0, 26, '波動度越高，這張債越不值錢', { class: 'lbl-b', fill: 'var(--ink)' });
+    for (let v = 94; v <= 102; v += 2) { el('line', { x1: L, x2: R, y1: Y(v), y2: Y(v), class: 'ax', 'stroke-dasharray': '2 6' }, svg); txt(svg, L - 12, Y(v) + 7, v, { 'text-anchor': 'end', class: 'axl' }); }
+    pts.forEach(([v]) => txt(svg, X(v), B + 36, v + '%', { 'text-anchor': 'middle', class: 'axl' }));
+    txt(svg, (L + R) / 2, B + 68, '三檔標的的年化波動度', { 'text-anchor': 'middle', class: 'axt' });
+    el('line', { x1: L, x2: R, y1: Y(100), y2: Y(100), stroke: 'var(--ink)', 'stroke-width': 2, 'stroke-dasharray': '8 6' }, svg);
+    txt(svg, R, Y(100) - 12, '客戶付 100', { 'text-anchor': 'end', class: 'lbl-b', fill: 'var(--ink)' });
+    el('path', { d: pts.map(([v, f], i) => (i ? 'L' : 'M') + X(v) + ' ' + Y(f)).join(''), fill: 'none', stroke: 'var(--hero)', 'stroke-width': 4.5, 'data-draw': '', 'data-at': 20, 'data-len': 80 }, svg);
+    pts.forEach(([v, f], i) => { el('circle', { cx: X(v), cy: Y(f), r: 7, fill: 'var(--hero)', 'data-in': 40 + i * 8, 'data-fx': 'scale' }, svg); txt(svg, X(v) + (i === 0 ? 14 : 0), Y(f) + (i < 2 ? -18 : 38), f.toFixed(1), { 'text-anchor': i === 0 ? 'start' : 'middle', class: 'lbl-m', fill: 'var(--hero)', 'data-in': 44 + i * 8, 'data-fx': 'fade' }); });
+    // term bars, axis 90 → 102
+    const rows = [['執行價 80%＋下限 65%', 100.608], ['下限價 72% → 65%', 99.442], ['出場價 100% → 90%', 98.534], ['原始條件', DATA.dec.fv, 'hero'], ['相關係數降到 0.5', 95.284], ['拿掉下限（歐式賣權）', 94.361]];
+    const lo = 90, hi = 102, box = document.getElementById('termBars');
+    box.innerHTML = `<div style="font:700 24px var(--f-body);margin-bottom:14px">同樣 10% 配息，只改一個條件時的商品價值</div>` + rows.map(([lab, v, k], i) => `
+        <div style="display:grid;grid-template-columns:340px 1fr;align-items:center;height:70px">
+            <div style="font:${k ? 700 : 500} 26px var(--f-body);color:${k ? 'var(--hero)' : 'var(--ink)'}">${lab}</div>
+            <div style="position:relative;height:60%">
+                <div data-grow="${(v - lo) / (hi - lo)}" data-at="${30 + i * 6}" style="position:absolute;inset:0;background:${k ? 'var(--hero)' : (v > 100 ? 'var(--ink)' : '#8c857e')};transform-origin:0 50%"></div>
+                <div data-in="${60 + i * 6}" data-fx="fade" style="position:absolute;top:50%;left:${(v - lo) / (hi - lo) * 100}%;transform:translateY(-50%);padding-left:10px;font:700 26px var(--f-mono);color:${k ? 'var(--hero)' : 'var(--ink)'};white-space:nowrap">${v.toFixed(1)}</div>
+            </div></div>`).join('') +
+        `<div style="display:grid;grid-template-columns:340px 1fr"><div></div><div style="position:relative;height:40px;font:500 20px var(--f-mono);color:var(--muted)">
+            <span style="position:absolute;left:0">90</span><span style="position:absolute;left:${10 / 12 * 100}%;transform:translateX(-50%);color:var(--ink);font-weight:700">100</span><span style="position:absolute;right:0">102</span></div></div>`;
+    const ref = document.createElement('div');
+    ref.style.cssText = `position:absolute;top:var(--rt);bottom:40px;left:calc(340px + (100% - 340px) * ${10 / 12});border-left:2px dashed var(--ink);pointer-events:none`;
+    box.style.position = 'relative'; box.appendChild(ref); ref.style.setProperty('--rt', (box.children[1].offsetTop - 6) + 'px');
+})();
+
+/* ---------- 16 replay 2024 ---------- */
+(() => {
+    const Y4 = DATA.y24, end = Y4.dates.findIndex(d => d > '2024-12-05');
+    const cut = a => a.slice(0, end);
+    const dates = cut(Y4.dates), i705 = dates.indexOf('2024-07-05'), iMin = dates.indexOf('2024-11-14'), i807 = dates.indexOf('2024-08-07');
+    pathChart(document.getElementById('y24Path'), {
+        dates, ymin: .2, ymax: 1.6, step: .2, labelW: 170,
+        series: [{ name: 'TSM', values: cut(Y4.TSM) }, { name: 'ARM', values: cut(Y4.ARM) }, { name: 'NVDA', values: cut(Y4.NVDA) }, { name: 'DELL', values: cut(Y4.DELL), color: '#5f5953' }, { name: 'SMCI', values: cut(Y4.SMCI), hero: true }],
+        bands: [{ lo: .6, hi: .65, fill: 'var(--down)', op: .25, label: '下限價 60–65%', color: 'var(--down)', at: 0, below: true }, { lo: .9, hi: 1, fill: 'var(--ink)', op: .07, label: '', color: 'var(--ink)' }],
+        win: ['2024-06-05', '2024-07-05'], bandLabel: '閉鎖 1 個月',
+        notes: [{ i: i705, v: Y4.DELL[i705], text: ['7/5 解鎖：全部 ≥ 出場價', '（90–100%）→ 三張都出場'], dx: 16, dy: -250, color: 'var(--ink)', at: 150 },
+                { i: i807, v: Y4.SMCI[i807], text: ['8/7 DELL 63.8%', 'SMCI 61.4%'], anchor: 'end', dx: -16, dy: 110, at: 165 },
+                { i: iMin, v: Y4.SMCI[iMin], text: ['11/14 SMCI 22.4%'], anchor: 'end', dx: -16, dy: 8, at: 180 }]
+    });
+})();
+
+/* ---------- 18 money flow ---------- */
+(() => {
+    const svg = document.getElementById('moneyFlow');
+    const nodes = [['散戶', '專業投資人', 'ink'], ['台北富邦銀行', '受託機構 · 特定金錢信託', 'ink'], ['瑞銀 UBS AG', '倫敦分行發行', 'hero'], ['市場', '三檔股票與選擇權', 'muted']];
+    const bw = 300, gap = (1686 - bw * 4) / 3, y = 290, bh = 170;
+    const X = i => i * (bw + gap);
+    nodes.forEach(([n, r, c], i) => {
+        const g = el('g', { 'data-in': 10 + i * 8, 'data-fx': 'fade' }, svg);
+        el('rect', { x: X(i), y, width: bw, height: bh, fill: c === 'hero' ? 'var(--hero)' : 'var(--paper)', stroke: c === 'muted' ? 'var(--peer)' : c === 'hero' ? 'var(--hero)' : 'var(--ink)', 'stroke-width': 2.5, 'stroke-dasharray': c === 'muted' ? '8 6' : '' }, g);
+        txt(g, X(i) + bw / 2, y + 74, n, { 'text-anchor': 'middle', style: `font: 700 36px var(--f-body); fill: ${c === 'hero' ? '#fff' : 'var(--ink)'}` });
+        txt(g, X(i) + bw / 2, y + 120, r, { 'text-anchor': 'middle', style: `font: 500 22px var(--f-body); fill: ${c === 'hero' ? 'rgba(255,255,255,.88)' : 'var(--muted)'}` });
+    });
+    const arrow = (x1, x2, yy, label, col, at, dir = 1) => {
+        const g = el('g', { 'data-in': at, 'data-fx': 'fade' }, svg);
+        el('line', { x1, x2, y1: yy, y2: yy, stroke: col, 'stroke-width': 3 }, g);
+        const xe = dir > 0 ? x2 : x1;
+        el('path', { d: `M${xe} ${yy} l${-dir * 16} -9 l0 18 z`, fill: col }, g);
+        txt(g, (x1 + x2) / 2, yy - 14, label, { 'text-anchor': 'middle', style: `font: 700 24px var(--f-body); fill: ${col}` });
+    };
+    for (let i = 0; i < 2; i++) {
+        arrow(X(i) + bw + 12, X(i + 1) - 12, y + 50, '本金 100', 'var(--ink)', 40 + i * 6, 1);
+        arrow(X(i) + bw + 12, X(i + 1) - 12, y + 130, '配息／還本', 'var(--muted)', 60 + i * 6, -1);
+    }
+    arrow(X(2) + bw + 12, X(3) - 12, y + 50, 'Delta 避險', 'var(--hero)', 80, 1);
+    arrow(X(2) + bw + 12, X(3) - 12, y + 130, '調整部位', 'var(--muted)', 86, -1);
+    const g = el('g', { 'data-in': 100, 'data-fx': 'fade' }, svg);
+    const xa = X(2) + bw / 2, xb = X(1) + bw / 2, ya = y + bh + 10;
+    el('path', { d: `M${xa} ${ya} C ${xa} ${ya + 170}, ${xb} ${ya + 170}, ${xb} ${ya + 18}`, fill: 'none', stroke: 'var(--accent-2)', 'stroke-width': 4 }, g);
+    el('path', { d: `M${xb} ${ya + 2} l-11 20 l22 0 z`, fill: 'var(--accent-2)' }, g);
+    txt(g, (xa + xb) / 2, ya + 168, '通路服務費 0–5%（發行時一次付清）', { 'text-anchor': 'middle', style: 'font: 700 28px var(--f-body); fill: #8a6d3b' });
+    const g2 = el('g', { 'data-in': 120, 'data-fx': 'fade' }, svg);
+    txt(g2, X(0), 90, '客戶付', { style: 'font: 500 26px var(--f-body); fill: var(--muted)' });
+    txt(g2, X(0), 165, '100.0', { style: 'font: 700 60px var(--f-mono); fill: var(--ink)' });
+    txt(g2, X(2), 90, '本組估計的公允價值', { style: 'font: 500 26px var(--f-body); fill: var(--muted)' });
+    txt(g2, X(2), 165, DATA.dec.fv.toFixed(1), { style: 'font: 700 60px var(--f-mono); fill: var(--hero)' });
+    txt(g2, X(1), 157, `差 ${DATA.dec.margin.toFixed(1)}：發行商利潤＋通路費`, { style: 'font: 700 30px var(--f-body); fill: #8a6d3b' });
+})();
+
+/* ===== slide controller ===== */
+const SCENES = {};
+class SlidePresentation {
+    constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.stage = document.getElementById('deckStage'); this.cur = 0; this.frame = 0; this.last = 0;
+        this.setupScale(); this.setupNav();
+        const q = new URLSearchParams(location.hash.slice(1));
+        this.show(Math.max(0, (parseInt(q.get('s'), 10) || 1) - 1));
+        if (q.has('end') || q.has('f')) { this.frame = q.has('f') ? +q.get('f') : this.dur(); this.paused = true; this.render(); }
+        window.addEventListener('beforeprint', () => this.slides.forEach((s, i) => this.scene(i).render(1e6, s)));
+        requestAnimationFrame(t => this.tick(t));
+    }
+    dur(i = this.cur) { return this.scene(i).duration; }
+    setupScale() {
+        const f = () => { const k = Math.min(innerWidth / 1920, innerHeight / 1080);
+            this.stage.style.transform = `translate(${(innerWidth - 1920 * k) / 2}px, ${(innerHeight - 1080 * k) / 2}px) scale(${k})`; };
+        f(); addEventListener('resize', f);
+    }
+    setupNav() {
+        document.addEventListener('keydown', e => {
+            if (['ArrowRight', 'ArrowDown', ' ', 'PageDown', 'Enter'].includes(e.key)) { e.preventDefault(); this.go(this.cur + 1); }
+            else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); this.go(this.cur - 1); }
+            else if (e.key === 'Home') this.go(0); else if (e.key === 'End') this.go(this.slides.length - 1);
+            else if (e.key === 'r' || e.key === 'R') this.go(this.cur);
+        });
+        let lock = false;
+        addEventListener('wheel', e => { if (lock || Math.abs(e.deltaY) < 30) return; lock = true; setTimeout(() => (lock = false), 700); this.go(this.cur + (e.deltaY > 0 ? 1 : -1)); }, { passive: true });
+        let sx = 0;
+        addEventListener('touchstart', e => (sx = e.touches[0].clientX), { passive: true });
+        addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) this.go(this.cur + (dx < 0 ? 1 : -1)); });
+        this.stage.addEventListener('click', e => { if (!e.target.closest('a,button')) this.go(this.cur + 1); });
+    }
+    go(i) { this.paused = false; this.show(Math.max(0, Math.min(i, this.slides.length - 1))); }
+    show(i) {
+        this.cur = i; this.frame = 0;
+        this.slides.forEach((s, k) => s.classList.toggle('active', k === i));
+        document.body.classList.toggle('on-cine', this.slides[i].classList.contains('cine'));
+        document.getElementById('progress').style.transform = `scaleX(${(i + 1) / this.slides.length})`;
+        document.getElementById('hud').textContent = `${String(i + 1).padStart(2, '0')} / ${String(this.slides.length).padStart(2, '0')}`;
+        history.replaceState(null, '', '#s=' + (i + 1));
+        this.render();
+    }
+    scene(i = this.cur) { const sc = SCENES[this.slides[i].dataset.scene]; return sc || { duration: +(this.slides[i].dataset.dur || 150), render: autoRender }; }
+    render() { this.scene().render(this.frame, this.slides[this.cur]); }
+    tick(t) {
+        const dt = this.last ? (t - this.last) / (1000 / FPS) : 0; this.last = t;
+        if (!this.paused && this.frame < this.dur()) { this.frame = Math.min(this.dur(), this.frame + dt); this.render(); }
+        requestAnimationFrame(x => this.tick(x));
+    }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>
